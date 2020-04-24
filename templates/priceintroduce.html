@@ -1,0 +1,216 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %}首页-区块链音乐版权平台{% endblock %}
+{% block custom_bread %}
+    <section>
+        <div class="wp">
+            <ul class="crumbs">
+                <li><a href="{% url 'index' %}">首页</a>></li>
+                <li>价格&授权</li>
+            </ul>
+        </div>
+    </section>
+{% endblock %}
+
+{% block content %}
+
+    <section>
+        <div class="module">
+            <div class="wp">
+                <h1>音乐授权&音乐单价</h1>
+                <div class="module1 eachmod">
+                    <h3>区块链音乐版权平台上的每首音乐，都有5种售价与授权方式， <br><br>
+                        授权使用范围如下表会有一定区别：选择适合您的音乐授权方式，（个人授权，企业授权，无限制授权），以适应您的项目特定需求。<br><br>
+                        下表金额为每个档位的权限说明，实际音乐售价可在该产品详细页面查看。 </h3><br><br>
+                    <table width="1178" height="493" border="1">
+                        <tbody>
+                        <tr style="color: #E9E9E9;background: #7a7a7a;height: 30px;">
+                            <th scope="col">&nbsp;</th>
+                            <th scope="col">音乐分享0 - 个人</th>
+                            <th scope="col">音乐授权1 - 个人</th>
+                            <th scope="col">音乐授权2 - 企业</th>
+                            <th scope="col">音乐授权3 - 企业</th>
+                            <th scope="col">音乐授权4 - 企业</th>
+                            <th scope="col">音乐授权5 - 无限制</th>
+                        </tr>
+                        <tr style="color: #E9E9E9;background: #7a7a7a;">
+                            <th scope="row">货币：ETH<br><span style="font-size: 10px">(平台收取交易费)</span></th>
+                            <th><span style="font-size: 30px">0.01</span><span style="font-size: 10px">/首</span></th>
+                            <th><span style="font-size: 30px">0.02</span><span style="font-size: 10px">/首</span></th>
+                            <th><span style="font-size: 30px">0.03</span><span style="font-size: 10px">/首</span></th>
+                            <th><span style="font-size: 30px">0.04</span><span style="font-size: 10px">/首</span></th>
+                            <th><span style="font-size: 30px">0.05</span><span style="font-size: 10px">/首</span></th>
+                            <th><span style="font-size: 30px">0.06</span><span style="font-size: 10px">/首</span></th>
+                        </tr>
+                        <tr style='height: 45px'>
+                            <th scope="row">完整产品</th>
+                            <th>√</th>
+                            <th>√</th>
+                            <th>√</th>
+                            <th>√</th>
+                            <th>√</th>
+                            <th>√</th>
+                        </tr>
+                        <tr style='height: 45px'>
+                            <th scope="row">电子上链授权文件<br><span style="font-size: 10px">(简易的电子档授权文件)</span></th>
+                            <th>√</th>
+                            <th>√</th>
+                            <th>√</th>
+                            <th>√</th>
+                            <th>√</th>
+                            <th>√</th>
+                        </tr>
+                        <tr style="height: 45px">
+                            <th scope="row">授权项目数<br><span style="font-size: 10px">(音乐可用于产品的数量)</span></th>
+                            <th>×</th>
+                            <th style="font-size: 10px">限使用在“1”个项目内</th>
+                            <th style="font-size: 10px">限使用在“1”个项目内</th>
+                            <th style="font-size: 10px">限使用在“1”个项目内</th>
+                            <th style="font-size: 10px">限使用在“1”个项目内</th>
+                            <th style="font-size: 10px">限使用在“1”个项目内</th>
+                        </tr>
+                        <tr style="height: 45px">
+                            <th scope="row">授权时间<br><span style="font-size: 10px">(音乐可用于产品的授权时间)</span></th>
+                            <th>×</th>
+                            <th style="font-size: 10px">五个月</th>
+                            <th style="font-size: 10px">1年</th>
+                            <th style="font-size: 10px">3年</th>
+                            <th style="font-size: 10px">无限</th>
+                            <th style="font-size: 10px">无限</th>
+                        </tr>
+                        <tr style="height: 45px">
+                            <th scope="row">全球授权<br><span style="font-size: 10px">(YouTube广告投放等)</span></th>
+                            <th>×</th>
+                            <th><span style='font-size: 10px'>限个人使用</span></th>
+                            <th>√</th>
+                            <th>√</th>
+                            <th>√</th>
+                            <th>√</th>
+                        </tr>
+                        <tr style="height: 45px">
+                            <th scope="row">受众数量<br><span style="font-size: 10px">(电视、广播、视频平台等)</span></th>
+                            <th>×</th>
+                            <th>×</th>
+                            <th><span style='font-size: 10px'>受众数量10万人</span></th>
+                            <th><span style='font-size: 10px'>受众数量100万人</span></th>
+                            <th><span style='font-size: 10px'>受众数量1000万人</span></th>
+                            <th><span style='font-size: 10px'>无限制</span></th>
+                        </tr>
+                        <tr style="height: 45px">
+                            <th scope="row">产品下载量限制<br><span style="font-size: 10px">(APP、DVDs、游戏、有声读物等)</span></th>
+                            <th>×</th>
+                            <th>×</th>
+                            <th><span style='font-size: 10px'>下载量不可高于1万次</span></th>
+                            <th><span style='font-size: 10px'>下载量不可高于10万次</span></th>
+                            <th><span style='font-size: 10px'>下载量不可高于100万次</span></th>
+                            <th><span style='font-size: 10px'>无限制</span></th>
+                        </tr>
+                        <tr style='height: 45px'>
+                            <th scope="row">电影</th>
+                            <th>×</th>
+                            <th><span style='font-size: 10px'>独立电影&独立电影节</span></th>
+                            <th><span style='font-size: 10px'>独立电影&独立电影节</span></th>
+                            <th><span style='font-size: 10px'>独立电影&独立电影节</span></th>
+                            <th><span style='font-size: 10px'>网络电影</span></th>
+                            <th><span style='font-size: 10px'>院线电影</span></th>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section style="margin-top: -50px">
+    <div class="module greybg" style="height: 200px">
+        <div class="wp">
+            <h1>怎样选择授权音乐？</h1>
+            <div class="module3 eachmod">
+                <div style="width: 300px;float: left;">
+                    <span style="float: left; font-size: 20px">请您选择音乐用途</span><br><br><br>
+                    <select id="usesome" style="float: left;">
+                        <option value="">—————————未选择—————————</option>
+                        <option value=1>电影/动画</option>
+                        <option value=2>广告/宣传/企业官网</option>
+                        <option value=3>游戏</option>
+                        <option value=4>综艺/节目/连续剧</option>
+                        <option value=5>APP/H5</option>
+                        <option value=6>自媒体/VLOG</option>
+                        <option value=7>短视频/微电影</option>
+                        <option value=8>广播剧/有声读物</option>
+                        <option value=9>线下/活动/演出</option>
+                        <option value=10>个人/教学</option>
+                        <option value=11>实物硬件设备</option>
+                        <option value=12>电商主图视频</option>
+                    </select>
+                </div>
+                <div style="width: 300px;float: left;margin-left: 100px">
+                    <span style="float: left; font-size: 20px">请您选择使用范围</span><br><br><br>
+                    <select id="userange" style="float: left;">
+                        <option value="">—————————未选择—————————</option>
+                        <option value=1>院线</option>
+                        <option value=2>电视</option>
+                        <option value=3>网络</option>
+                        <option value=4>独立电影节</option>
+
+                    </select>
+
+                </div>
+                <div style="width: 300px;float: left;margin-left: 100px">
+                    <span style="float: left; font-size: 20px">请您选择使用年限</span><br><br><br>
+                    <select id="usetime" style="float: left;">
+                        <option value="">—————————未选择—————————</option>
+                        <option value=1>五个月内</option>
+                        <option value=2>一年</option>
+                        <option value=3>三年</option>
+                        <option value=4>无限制</option>
+                    </select>
+
+                </div>
+                <div style="float: left;margin-top: 50px">
+                    <span style="font-size: 15px;float: left;margin-top: 15px">根据您选择的内容，我们推荐您购买：</span>
+                    <h1 STYLE="float: left">音乐权限<></h1>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <section>
+        <div class="module">
+            <div class="wp">
+                <h1>如何填写授权项目名称？</h1>
+                <div class="module1 eachmod">
+                    <h2 style="font-weight: bold">一、关于使用音乐的项目名称在填写时可能存在以下疑问： </h2><br><br>
+                    <h3>1、项目名称是指什么？要怎么填写？</h3><br><br>
+                    答：项目名称是您具体使用音乐的这个产品名称哦，可以是一个系列产品，也可以是单独的一个广告。例如您这边音乐是用于京东公司的一个新品广告，那么您的项目名称就是：北京京东世纪贸易有限公司XX新品广告音乐。
+                    <br><br><br><br>
+                    <h3>2、我们是广告公司，购买后要为甲方公司制作项目，这时候项目名称要如何填写呢？</h3><br><br>
+                    答：音乐实际是授权在您甲方公司的一个具体项目上。比如您这边是广告公司A，现为制作京东公司的企业宣传片而选购音乐，则需要填写的项目名称为：广告公司A制作，北京京东世纪贸易有限公司年度企业宣传片。
+                    <br><br><br><br>
+                    <h3>3、我们为公司H5挑音乐，但是具体的项目名称还没有定，现在想先申请发票报销，该怎么填写？</h3><br><br>
+                    答：例如为京东公司H5挑音乐，名称未定的情况下请您填写：北京京东世纪贸易有限公司H5项目音乐使用。并在后期明确项目名称后，将新的名称与订单号发送给在线客服，我们会重新录入数据并发送授权文件给您。如果未及时更新明确的项目名称，将降低授权文件的法律效益。
+                    <br><br><br><br>
+                    <h3>4、我们初步定好了项目名称，但是后期可能会修改，如果我要申请合同，该怎么办？</h3><br><br>
+                    答：假如您这边是京东公司，要为企业宣传片购买音乐。那么您可以这样填写：暂定为北京京东世纪贸易有限公司企业宣传片项目。
+                    并在合同的最后一条其他约定处，手写补充内容：目前暂定项目名称为 北京京东世纪贸易有限公司企业宣传片项目 ，后期可能修改为 北京京东世纪贸易有限公司企业发展历程 或 北京京东世纪贸易有限公司企业展望
+                    ，是北京京东世纪贸易有限公司为2018年企业宣传片制作的推广项目。 <br><br><br><br>
+                    <h3>5、直接填写公司名称，不写具体的项目名称可不可以？</h3><br><br>
+                    答：一家公司名下可能是有多个项目需要使用音乐，平台上单笔的音乐购买只能使用在一个项目中，如果仅写公司名称，而不详细填写是哪个具体项目使用，将降低授权文件的法律效益。
+                    因此请务必在初次申请时填写明确实际使用产品的项目名称。 <br><br><br><br>
+                    <h2 style="font-weight: bold">二、注意事项：</h2><br><br>
+                    <h3>1、授权项目名称将上链，请务必填写详细。</h3><br><br>
+                    <h3>2、为避免公司名称缩写可能导致的核实不便，请填写公司全称。</h3><br><br>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+{% block custom_js %}
+    <script src="{% static 'js/selectUi.js' %}" type='text/javascript'></script>
+    <script src="{% static 'js/deco-common.js' %}" type='text/javascript'></script>
+    <script type="text/javascript" src="{% static 'js/plugins/laydate/laydate.js' %}"></script>
+    <script src="{% static  'js/plugins/layer/layer.js' %}"></script>
+    <script src="{% static 'js/plugins/queryCity/js/public.js' %}" type="text/javascript"></script>
+    <script src="{% static 'js/unslider.js' %}" type="text/javascript"></script>
+    <script src="{% static 'js/plugins/jquery.scrollLoading.js' %}" type="text/javascript"></script>
+    <script type="text/javascript" src="{% static 'js/index.js' %}"></script>
+{% endblock %}

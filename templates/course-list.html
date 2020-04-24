@@ -1,0 +1,234 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %}音乐列表页-区块链音乐版权平台{% endblock %}
+{% block custom_bread %}
+    <section>
+        <div class="wp">
+            <ul class="crumbs">
+                <li><a href="{% url 'index' %}">首页</a>></li>
+                <li>音乐列表</li>
+            </ul>
+        </div>
+    </section>
+{% endblock %}
+{% block content %}
+    <input hidden value={{ taglist }} id='taglist'>
+    <section>
+        <div class="wp">
+            <div class="list" style="margin-top:0;">
+                <div class="left layout">
+                    <div class="listoptions">
+                        <ul>
+                            <li>
+                                <h2>音乐流派</h2>
+                                <div class="cont">
+                                    <ul id="test" class="test">
+                                        <li id="1">古典</li>
+                                        <li id="2">爵士</li>
+                                        <li id="3">摇滚</li>
+                                        <li id="4">放克</li>
+                                        <li id="5">后摇</li>
+                                        <li id="6">电子</li>
+                                        <li id="7">嘻哈</li>
+                                        <li id="8">乡村</li>
+                                        <li id="9">蓝草</li>
+                                        <li id="10">民谣</li>
+                                        <li id="11">拉丁</li>
+                                        <li id="12">雷鬼</li>
+                                        <li id="13">氛围</li>
+                                        <li id="14">古风</li>
+                                        <li id="15">迪斯科</li>
+                                        <li id="16">重金属</li>
+                                        <li id="17">轻音乐</li>
+                                        <li id="18">中国风</li>
+                                        <li id="19">管弦乐</li>
+                                        <li id="20">布鲁斯</li>
+                                        <li id="21">巴洛克</li>
+                                        <li id="22">新民乐</li>
+                                        <li id="23">新时代</li>
+                                        <li id="24">车库</li>
+                                        <li id="25">拉格泰姆</li>
+                                        <li id="26">摇摆爵士</li>
+                                        <li id="27">酷爵士乐</li>
+                                        <li id="28">比波普爵士</li>
+                                        <li id="29">神游舞曲</li>
+                                        <li id="30">EDM</li>
+                                        <li id="31">House</li>
+                                        <li id="32">Trap</li>
+                                        <li id="33">R&B</li>
+                                    </ul>
+
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="head">
+                        <ul class="tab_header">
+                            <li class="{% if sort == '' %}active{% endif %}"><a
+                                    href="?sort=&keywords={{ keywords }}&s_type={{ s_type }}&taglist={{ taglist }}">最新 </a>
+                            </li>
+                            <li class="{% if sort == 'hot' %}active{% endif %}"><a
+                                    href="?sort=hot&keywords={{ keywords }}&s_type={{ s_type }}&taglist={{ taglist }}">最热门</a>
+                            </li>
+                            <li class="{% if sort == 'buy_nums' %}active{% endif %}"><a
+                                    href="?sort=buy_nums&keywords={{ keywords }}&s_type={{ s_type }}&taglist={{ taglist }}">销量最高</a>
+                            </li>
+                            <li class="{% if sort == 'click' %}active{% endif %}"><a
+                                    href="?sort=click&keywords={{ keywords }}&s_type={{ s_type }}&taglist={{ taglist }}">点击最多</a>
+                            </li>
+                            <li class="{% if sort == 'fav_nums' %}active{% endif %}"><a
+                                    href="?sort=fav_nums&keywords={{ keywords }}&s_type={{ s_type }}&taglist={{ taglist }}">收藏最多</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div id="inWindow">
+                        <div class="tab_cont " id="content">
+                            <div class="group_list">
+                                {% for music in all_music.object_list %}
+                                    <div class="box" style="height:410px">
+                                        <a href="{% url 'music:detail' music.id %}">
+                                            <img width="280" height="280" class="scrollLoading"
+                                                 src="{{ MEDIA_URL }}{{ music.image }}" style="height: 280px"/>
+                                        </a>
+                                        <div class="des">
+                                            <a href="{% url 'music:detail' music.id %}">
+                                                <h2 title="{{ music.music_name }}" style="height: 29px;width: 263px;overflow: hidden">{{ music.music_name }}</h2>
+                                            </a>
+                                            <span class="fl">时长(秒)：<i class="key">{{ music.music_times }}</i></span>
+                                            <span class="fr">购买人数：{{ music.all_sell_count }}&nbsp;&nbsp;</span>
+                                            <span class="fl2">歌曲流派：{% for tag in music.music_tag %}
+                                                {{ tag.show_name }}
+                                            {% endfor %}</span>
+                                            <span class="fl3">价格(ETH)：{{ music.music_price1 }}&nbsp;&nbsp;起&nbsp;</span>
+                                            <span class="fr2">点击数：{{ music.click_nums }}&nbsp;&nbsp;</span>
+                                        </div>
+                                        <div class="bottom">
+                                            <a href="{% url 'music:detail' music.id %}"><span
+                                                    class="fl">创作者：{{ music.owner.nick_name }}</span></a>
+                                            <span class="star fr  notlogin
+                                        " data-favid="15">
+                                        {{ music.fav_nums }}
+                                    </span>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+
+                            <div class="pageturn">
+                                <ul class="pagelist">
+                                    {% if all_music.has_previous %}
+                                        <li class="long"><a
+                                                href="?{{ all_music.previous_page_number.querystring }}">上一页</a></li>
+                                    {% endif %}
+
+                                    {% for page in all_music.pages %}
+                                        {% if page %}
+                                            {% ifequal page all_music.number %}
+                                                <li class="active"><a href="?{{ page.querystring }}">{{ page }}</a></li>
+                                            {% else %}
+                                                <li><a href="?{{ page.querystring }}" class="page">{{ page }}</a></li>
+                                            {% endifequal %}
+                                        {% else %}
+                                            <li class="none">...</li>
+                                        {% endif %}
+                                    {% endfor %}
+                                    {% if all_music.has_next %}
+                                        <li class="long"><a href="?{{ all_music.next_page_number.querystring }}">下一页</a>
+                                        </li>
+                                    {% endif %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="right layout">
+                    <div class="head">热门音乐推荐</div>
+                    <div class="group_recommend">
+
+                        {% for music in hot_musics %}
+                            <div class="special" style="height: auto">
+                                <dt>
+                                    <a target="_blank" href="{% url 'music:detail' music.id %}">
+                                        <img width="260" height="260" class="scrollLoading"
+                                             src="{{ music.image.url }}" />
+                                    </a>
+                                </dt>
+                                <dd>
+                                    <a target="_blank" href="{% url 'music:detail' music.id %}"><h2> {{ music.music_name }}</h2></a>
+
+                                    <span class="fl" style="height: 20px;font-size: 15px;margin-top: 5px">价格(ETH)：<i
+                                            class="key">{{ music.music_price1 }}起</i></span>
+                                    <span class="fr" style="height: 20px;font-size: 15px;margin-top: 5px">购买人数：<i
+                                            class="key">{{ music.all_sell_count }}</i></span>
+                                    <span class="fl" style="height: 20px;font-size: 15px;margin-top: 5px">流派：<i
+                                            class="key">{% for tag in music.music_tag %}
+                                        {{ tag.show_name }}
+                                    {% endfor %}</i></span>
+                                </dd>
+                            </div>
+                        {% endfor %}
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        $(function () {
+            var list = new Array
+            if ($("#taglist").val() != undefined) {
+                for (let i = 0; i < $("#taglist").val().split(',').length; i++) {
+                    list.push($("#taglist").val().split(',')[i])
+                }
+            }
+            console.log($("#taglist").val())
+            console.log(list)
+            for (let i = 0; i < list.length; i++) {
+                $("#" + list[i]).addClass('selected')
+            }
+            $("#test li").click(function () {
+                if (list.length < 5 || $(this)[0].id == list[0] || $(this)[0].id == list[1] || $(this)[0].id == list[2] || $(this)[0].id == list[3] || $(this)[0].id == list[4]) {
+                    var data = {};
+                    data.id = $(this)[0].id
+                    data.value = $(this).text()
+                    if (JSON.stringify(list).indexOf(JSON.stringify(data.id)) == -1) {
+                        list.push(data.id)
+                        $(this).addClass('selected')
+                    } else {
+                        for (let i = 0; i < list.length; i++) {
+                            if (list[i] == data.id) {
+                                list.splice(i, 1)
+                            }
+                        }
+                        $(this).removeClass("selected")
+                    }
+                    console.log(list)
+                    form = $("<form></form>")
+                    form.attr('action', '/music/musiclist/')
+                    form.attr('method', 'get')
+                    input1 = $("<input type='hidden' name='taglist' id ='taglist'/>")
+                    input1.attr('value', list)
+                    input2 = $("<input type='hidden' name='keywords' id ='keywords'/>")
+                    input2.attr('value', '{{ keywords }}')
+                    input3 = $("<input type='hidden' name='s_type' id ='s_type'/>")
+                    input3.attr('value', '{{ s_type }}')
+                    input4 = $("<input type='hidden' name='sort' id ='sort'/>")
+                    input4.attr('value', '{{ sort }}')
+                    form.append(input1)
+                    form.append(input2)
+                    form.append(input3)
+                    form.append(input4)
+                    form.appendTo("body")
+                    form.css('display', 'none')
+                    form.submit()
+                } else {
+                    alert('最多选择五个流派')
+                    return;
+                }
+            })
+        })
+
+    </script>
+{% endblock %}

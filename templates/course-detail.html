@@ -1,0 +1,458 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %}音乐详情页-区块链音乐版权平台{% endblock %}
+{% block custom_css %}
+    {#    <link rel="stylesheet" type="text/css" href="{% static 'css/muke/course/learn-less.css' %}"/>#}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/muke/course/course-comment.css' %}"/>
+    {#    <link rel="stylesheet" type="text/css" href="{% static 'css/muke/base.css' %}">#}
+    {#    <link rel="stylesheet" type="text/css" href="{% static 'css/muke/common-less.css' %}">#}
+    {#    <link rel="stylesheet" type="text/css" href="{% static 'css/muke/course/common-less.css' %}">#}
+    {#    <link rel="stylesheet" type="text/css" href="{% static 'css/mooc.css' %}"/>#}
+{% endblock %}
+{% block custom_bread %}
+    <section>
+        <div class="wp">
+            <ul class="crumbs">
+                <li><a href="{% url 'index' %}">首页</a>></li>
+                <li><a href="{% url 'music:musiclist' %}">音乐列表</a>></li>
+                <li>音乐详情</li>
+            </ul>
+        </div>
+    </section>
+{% endblock %}
+{% block content %}
+    <section>
+        <div class="wp">
+            <div class="groupPurchase_detail detail">
+                <div class="toppro">
+                    <div class="left">
+                        <div class="picbox">
+                            <div class="tb-booth tb-pic">
+                                <img width="440" height="440" src="{{ music.image.url }}" class="jqzoom"/>
+                            </div>
+
+                        </div>
+                        <div class="des">
+                            <h1>{{ music.music_name }}</h1>
+                            <span class="key">{{ music.music_desc }}</span>
+                            <div class="prize">
+                                <span class="fl">价格(ETH)：<i class="key"><span id="price">{{ music.music_price1 }}</span></i>&nbsp;&nbsp;</span>
+                                <span class="fr">购买人数：{{ music.all_sell_count }}</span>
+                            </div>
+                            <ul class="parameter">
+                                <li><span
+                                        class="pram word3">时&nbsp;&nbsp;长(秒)：</span><span>{{ music.music_times }}</span>
+                                </li>
+                                <li><span
+                                        class="pram word3">权限说明：</span><span id="pricefont">仅供个人欣赏</span></li>
+                                <li><span
+                                        class="pram word3">流&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;派：</span><span>{% for tag in music.music_tag %}
+                                    {{ tag.show_name }}{% endfor %}</span></li>
+                                <li><span class="pram word3">选择权限：</span>
+                                    <span><select id="quanxian">
+			    			<option value="1" selected="selected">音乐权限1-欣赏</option>
+			    			<option value="2">音乐权限2-个人</option>
+			    			<option value="3">音乐权限3-企业1</option>
+			    			<option value="4">音乐权限4-企业2</option>
+			    			<option value="5">音乐权限5-企业3</option>
+			    			<option value="6">音乐权限6-无限制</option>
+			    		</select>
+                                </span>
+
+                                </li>
+                                <li><span class="pram word3">试听歌曲：</span>
+                                    <span id="musicControl">
+        <a id="mc_play" class="stop">
+            <audio id="music" loop="loop" preload="none">
+                <source src="http://127.0.0.1:8080/ipfs/{{ music.music_demoLink }}"
+                        type="audio/mpeg">
+            </audio>
+        </a>
+ </span>
+                                </li>
+                            </ul>
+                            <div class="btns">
+                                <div class="btn colectgroupbtn" id="jsLeftBtn">
+                                    {% if has_fav_music %}已收藏{% else %}收藏{% endif %}
+                                </div>
+                                {% ifequal music.music_status 1 %}
+                                    <div class="buy btn" id="jsbuyBth">马上购买</div>
+                                {% else %}
+                                    <div class="buy btn">版权已下架</div>
+                                {% endifequal %}
+                            </div>
+                        </div>
+                        {#                        <div class="group-share-box">#}
+                        {#                            <div class="bdsharebuttonbox"#}
+                        {#                                 data-text="django开始了"#}
+                        {#                                 data-desc="我在#慕课网#发现了"#}
+                        {#                                 data-comment=""#}
+                        {#                                 data-url="/group/groupdetail/15/">#}
+                        {#                                <span class="fl">分享到：</span>#}
+                        {#                                <a href="#" class="bds_more" data-cmd="more"></a>#}
+                        {#                                <a title="分享到QQ空间" href="#" class="bds_qzone" data-cmd="qzone"></a>#}
+                        {#                                <a title="分享到新浪微博" href="#" class="bds_tsina" data-cmd="tsina"></a>#}
+                        {#                                <a title="分享到腾讯微博" href="#" class="bds_tqq" data-cmd="tqq"></a>#}
+                        {#                                <a title="分享到人人网" href="#" class="bds_renren" data-cmd="renren"></a>#}
+                        {#                                <a title="分享到微信" href="#" class="bds_weixin" data-cmd="weixin"></a>#}
+                        {#                            </div>#}
+                        {#                        </div>#}
+                    </div>
+                    <div class="right">
+                        <div class="head">
+                            <h1>音乐创作者</h1>
+                            <p style="font-size: 13px">金牌作曲，就在区块链音乐平台</p>
+                        </div>
+                        <div class="pic">
+                            <a href="">
+                                <img width="100px" height="100px" src="{{ music.owner.image.url }}"/>
+                            </a>
+                        </div>
+                        <a href="">
+                            <h2 class="center" title="{{ music.owner.nick_name }}">{{ music.owner.nick_name }}</h2>
+                        </a>
+                        <div class="btn  notlogin
+					     " data-favid="14" id="jsRightBtn">
+                            {% if has_fav_composer %}已收藏{% else %}收藏{% endif %}
+                        </div>
+                        <div class="clear">
+                            <ul>
+                                <li>
+                                    <span>作 &nbsp;曲&nbsp; 数：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ music.owner.get_all_music_num }}</span>
+                                </li>
+                                <li>
+                                    <span>销&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;量&nbsp;:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{ music.owner.get_all_sell_num }}</span>
+                                </li>
+                                <li>
+                                    <span>人&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;气&nbsp;:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ music.owner.hot_num |floatformat:1 }}</span>
+                                </li>
+                                <li>粉 &nbsp;丝&nbsp; 数：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    {{ music.owner.fav_nums }}
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section>
+        <div class="wp">
+            <div class="list groupPurchase_detail_pro">
+                <div class="left layout">
+                    <div class="head">
+                        <ul class="tab_header">
+                            <li class="{% ifequal is_comment 'False' %}active{% endifequal %}">歌曲详情</li>
+                            <li class="{% ifequal is_comment 'True' %}active{% endifequal %}">歌曲评论</li>
+                        </ul>
+                    </div>
+                    <div class="tab_cont {% ifequal is_comment 'True' %}hide{% endifequal %}">
+                        {% autoescape off %}{{ music.music_detail }} {% endautoescape %}
+                    </div>
+                    <div class="tab_cont {% ifequal is_comment 'False' %}hide{% endifequal %}">
+                        <!--发布评论-->
+                        <div id="js-pub-container" class="issques clearfix js-form">
+                            <div class="wgt-ipt-wrap pub-editor-wrap " id="js-pl-input-fake">
+                                <textarea id="js-pl-textarea" class="" placeholder="购买后可评论，请勿灌水！"></textarea>
+                            </div>
+                            <input type="button" id="js-pl-submit" class="pub-btn" data-cid="452" value="发表评论">
+                            <p class="global-errortip js-global-error"></p>
+                        </div>
+                        <div id="course_note">
+                            <ul class="mod-post" id="comment-list">
+                                {% for comment in comments %}
+                                    <li class="post-row">
+                                        <div class="media">
+                                            <span target="_blank"><img src='{{ comment.user.image.url }}' width='40'
+                                                                       height='40'/></span>
+                                        </div>
+                                        <div class="bd">
+                                            <div class="tit">
+                                                <span target="_blank">{% if comment.user.nick_name %}
+                                                    {{ comment.user.nick_name }}{% else %}
+                                                    {{ comment.user.username }}{% endif %}</span>
+                                                {% ifequal comment.user request.user %}
+                                                    <span onclick="deletecomm({{ comment.id }})"
+                                                          style="cursor:pointer;float: right">删除</span>{% endifequal %}
+                                            </div>
+                                            <p class="cnt">{{ comment.comments }}</p>
+                                            <div class="footer clearfix">
+                                                <span title="创建时间" class="l timeago">时间：{{ comment.add_time }}</span>
+                                            </div>
+
+                                        </div>
+
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="right layout">
+                    <div class="head">相关音乐推荐</div>
+                    <div class="group_recommend">
+                        {% for music in related_music %}
+                            <dl>
+                                <dt>
+                                    <a target="_blank" href="{% url 'music:detail' music.id %}">
+                                        <img width="190px" height="190px" class="scrollLoading"
+                                             src="{{ music.image.url }}"/>
+                                    </a>
+                                </dt>
+                                <dd>
+                                    <a target="_blank" href="{% url 'music:detail' music.id %}">
+                                        <h2> {{ music.music_name }}</h2></a>
+                                    <span class="fl">价格(ETH)：<i class="key">{{ music.music_price1 }}起</i></span>
+                                    <span class="fr">购买人数：<i class="key">{{ music.all_sell_count }}</i></span>
+                                    <span class="fl">流派：<i class="key">{% for tag in music.music_tag %}
+                                        {{ tag.show_name }}
+                                    {% endfor %}</i></span>
+
+                                </dd>
+                            </dl>
+                        {% endfor %}
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+
+{% block custom_js %}
+    <script type="text/javascript" src="{% static 'js/blockchainjs/web3.mini.js' %}"></script>
+    <script type="text/javascript" src='{% static 'js/blockchainjs/abi_addr.js' %}'></script>
+    <script type="text/javascript">
+        {#切换#}
+        $('.tab_header > li').click(function () {
+            var _self = $(this),
+                index = _self.index();
+            _self.addClass('active').siblings().removeClass('active');
+            $('.tab_cont').eq(index).removeClass('hide').siblings('.tab_cont').addClass('hide');
+        });
+        {#评论发布#}
+        $(document).ready(function () {
+            $('#js-pl-submit').on('click', function () {
+                var comments = $("#js-pl-textarea").val()
+                if (comments == "") {
+                    alert("评论不能为空")
+                    return
+                }
+                $.ajax({
+                    cache: false,
+                    type: "POST",
+                    url: "{% url 'music:comment' %}",
+                    data: {'music': {{ music.id }}, 'comments': comments},
+                    async: true,
+                    beforeSend: function (xhr, settings) {
+                        xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
+                    },
+                    success: function (data) {
+                        if (data.status == 'fail') {
+                            if (data.msg == '用户未登录') {
+                                alert('用户未登录')
+                                window.location.href = "/login?next=/music/{{ music.id }}/";
+                            } else {
+                                alert(data.msg)
+                            }
+                        } else if (data.status == 'success') {
+                            window.location.href = '/music/{{ music.id }}?is_comment=True';//刷新当前页面.
+                        }
+                    },
+                });
+            });
+        });
+
+        document.getElementById("quanxian").addEventListener("change", function () {
+            if ($('#quanxian').val() == 1) {
+                $('#price').text({{ music.music_price1 }});
+                $('#pricefont').text('仅供个人欣赏')
+            }
+            if ($('#quanxian').val() == 2) {
+                $('#price').text({{ music.music_price2 }});
+                $('#pricefont').text('授权时间：5个月。全球授权：限个人使用。')
+            }
+            if ($('#quanxian').val() == 3) {
+                $('#price').text({{ music.music_price3 }});
+                $('#pricefont').text('授权时间：1年.受众数量<=10万人.下载量<=1万.')
+            }
+            if ($('#quanxian').val() == 4) {
+                $('#price').text({{ music.music_price4 }});
+                $('#pricefont').text('授权时间：3年.受众数量<=100万人.下载量<=10万.')
+            }
+            if ($('#quanxian').val() == 5) {
+                $('#price').text({{ music.music_price5 }});
+                $('#pricefont').text('授权时间：无限.受众数量<=1000万人.下载量<=100万.')
+            }
+            if ($('#quanxian').val() == 6) {
+                $('#price').text({{ music.music_price6 }});
+                $('#pricefont').text('授权时间：无限.受众数量：无限制.下载量:无限制.')
+            }
+
+
+        })
+
+        //歌曲播放
+        document.getElementById("mc_play").addEventListener("click", function () {
+            if ($('#mc_play').hasClass('on')) {
+                $('#mc_play audio').get(0).pause();
+                $('#mc_play').attr('class', 'stop');
+            } else {
+                $('#mc_play audio').get(0).play();
+                $('#mc_play').attr('class', 'on');
+            }
+        })
+
+        //收藏分享
+        function add_fav(current_elem, fav_id, fav_type) {
+            $.ajax({
+                cache: false,
+                type: "POST",
+                url: "{% url 'op:fav' %} ",
+                data: {'fav_id': fav_id, 'fav_type': fav_type},
+                async: true,
+                beforeSend: function (xhr, settings) {
+                    xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
+                },
+                success: function (data) {
+                    if (data.status == 'fail') {
+                        if (data.msg == '用户未登录') {
+                            window.location.href = "/login?next=/music/{{ music.id }}/";
+                        } else {
+                            alert(data.msg)
+                            return
+                        }
+                    } else if (data.status == 'success') {
+                        current_elem.text(data.msg)
+                    }
+                },
+            });
+        }
+
+        $(document).ready(function () {
+            $('#jsLeftBtn').on('click', function () {
+                add_fav($(this), {{ music.id }}, 1);
+            });
+        });
+
+        $(document).ready(function () {
+            $('#jsRightBtn').on('click', function () {
+                add_fav($(this), {{ music.owner.id }}, 2);
+            });
+        });
+
+        {#var UTFTranslate = {#}
+        {#    Change: function (pValue) {#}
+        {#        return pValue.replace(/[^\u0000-\u00FF]/g, function ($0) {#}
+        {#            return escape($0).replace(/(%u)(\w{4})/gi, "\\u$2")#}
+        {#        });#}
+        {#    }#}
+        {# };#}
+        //用户购买
+        document.getElementById("jsbuyBth").addEventListener("click", function () {
+            if (ethereum.selectedAddress == undefined) {
+                alert('请登录METAMASK！')
+
+                async function testAsync() {
+                    const accounts = await ethereum.enable();
+                    return accounts;
+                }
+
+                const account = testAsync()
+                return;
+            }
+            if (ethereum.networkVersion != 428) {
+                alert('请切换网到http://428')
+                return;
+            }
+
+            if ($('#quanxian').val() != 1) {
+                var projectname = prompt('请填写授权项目名称(若不清楚请查看“价格&授权”板块)');
+                {#var proname = UTFTranslate.Change(projectname);#}
+                {#console.log(projectname);#}
+                if (projectname == '') {
+                    return;
+                }
+            }
+            {#console.log(proname.toLowerCase());#}
+            var music_bcId =
+            {{ music.music_bcId }}
+            var purchase_permission = $('#quanxian').val()
+            var price = $('#price').html()
+            var address = ethereum.selectedAddress;
+            var formdata = new FormData();
+            formdata.append('music_bcId', music_bcId);
+            formdata.append('purchase_permission', purchase_permission);
+            formdata.append('price', price);
+            formdata.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+            formdata.append('address', address);
+            formdata.append('projectname',projectname);
+            $.ajax({
+                cache: false,
+                type: 'post',
+                dataType: 'json',
+                url: "/music/purchaseone/",
+                data: formdata,
+                processData: false,    // 不处理数据
+                contentType: false,    // 不设置内容类型
+                success: function (data) {
+                    {#console.log(data)#}
+                    if (data.status == 'fail') {
+                        alert(data.msg)
+                        return;
+                    } else if (data.status == 'success') {
+                        var hashLinkfileHash = data.hashLinkfileHash
+                        web3 = new Web3(web3.currentProvider);
+                        var MyContract = new web3.eth.Contract(abi, addresss);
+                        MyContract.methods.purchase(data.project_name_utf8,data.music_bcId, data.purchase_permission).send({
+                            from: ethereum.selectedAddress,
+                            value: data.money
+                        })
+                            .on('transactionHash', function (hash) {
+                            })
+                            .on('receipt', function (receipt) {
+                                alert('购买成功，后台正在处理交易，请稍等')
+                                window.location.href = "{% url 'users:mypurchase_music' %}"
+
+                            })
+                            .on('confirmation', function (confirmationNumber, receipt) {
+
+                            })
+                            .on('error', function (error, receipt) {
+
+                            })
+                    }
+                },
+            });
+
+        });
+
+        function deletecomm(comment_id) {
+            $.ajax({
+                cache: false,
+                type: "POST",
+                url: "{% url 'music:deletecomm' %} ",
+                data: {'comment_id': comment_id},
+                async: true,
+                beforeSend: function (xhr, settings) {
+                    xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
+                },
+                success: function (data) {
+                    if (data.status == 'fail') {
+                        if (data.msg == '用户未登录') {
+                            window.location.href = "/login?next=/music/{{ music.id }}/";
+                        } else {
+                            alert(data.msg)
+                            return
+                        }
+                    } else if (data.status == 'success') {
+                        alert('删除成功');
+                        window.location.href = '/music/{{ music.id }}?is_comment=True';//刷新当前页面.
+                    }
+                },
+            });
+        }
+    </script>
+
+{% endblock %}

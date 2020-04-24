@@ -1,0 +1,314 @@
+{% extends 'usercenter-base.html' %}
+{% load staticfiles %}
+{% block title %}个人信息- 区块链音乐版权平台{% endblock %}
+{% block custom_bread %}
+    <section>
+        <div class="wp">
+            <ul class="crumbs">
+                <li><a href="{% url 'index' %}">首页</a>></li>
+                <li><a href="{% url 'users:info' %}">个人中心</a>></li>
+                <li>个人信息</li>
+            </ul>
+        </div>
+    </section>
+{% endblock %}
+
+{% block rigt_form %}
+    <div class="right">
+        <div class="personal_des ">
+            <div class="head" style="border:1px solid #eaeaea;">
+                <h1>个人信息</h1>
+            </div>
+            <div class="inforcon">
+                <div class="left" style="width:242px;">
+                    <iframe id='frameFile' name='frameFile' style='display: none;'></iframe>
+                    <form class="clearfix" id="jsAvatarForm" enctype="multipart/form-data" autocomplete="off"
+                          method="post" action="{% url 'users:image' %}" target='frameFile'>
+                        <label class="changearea" for="avatarUp">
+                            <span id="avatardiv" class="pic">
+                                <img width="100" height="100" class="js-img-show" id="avatarShow"
+                                     src="{{ user.image.url }}"/>
+                            </span>
+                            <span class="fl upload-inp-box" style="margin-left:70px;">
+                                <span class="button btn-green btn-w100" id="jsAvatarBtn">修改头像</span>
+                                <input type="file" name="image" id="avatarUp" class="js-img-up"/>
+                            </span>
+                        </label>
+                        {% csrf_token %}
+                    </form>
+                    <div style="border-top:1px solid #eaeaea;margin-top:30px;">
+                        <a class="button btn-green btn-w100" id="jsUserResetPwd" style="margin:10px auto;width:100px;">修改密码</a>
+                        <a class="button btn-green btn-w100" id="jsupdatekey" style="margin:10px auto;width:100px;">生成新交易账户</a>
+                        {% ifequal user.is_producter 0 %}
+                            <a class="button btn-green btn-w100" id="jsproductorkey"
+                               style="margin:10px auto;width:100px;">成为版权发布者</a>
+                        {% endifequal %}
+                        {% ifequal user.is_producter 1 %}
+                            <a class="button btn-green btn-w100" id="jsproductorexitkey"
+                               style="margin:10px auto;width:100px;">退出版权发布者</a>
+                        {% endifequal %}
+                    </div>
+                </div>
+
+                <form class="perinform" id="jsEditUserForm" autocomplete="off">
+                    <ul class="right">
+                        <li>昵&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：
+                            <input type="text" name="nick_name" id="nick_name"
+                                   value="{{ user.nick_name|default_if_none:'' }}" maxlength="10">
+                            <i class="error-tips"></i>
+                        </li>
+                        <li>生&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;日：
+                            <input type="text" id="birth_day" name="birthday"
+                                   value="{{ user.birthday|default_if_none:''|date:'Y-m-d' }}" readonly="readonly"/>
+                            <i class="error-tips"></i>
+                        </li>
+                        <li>性&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;别：
+                            <label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="gender" value="male"
+                                                                        {% if user.gender == 'male' %}checked="checked"{% endif %}>男</label>
+                            <label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="gender" value="female"
+                                                                              {% if user.gender == 'female' %}checked="checked"{% endif %}>女</label>
+                        </li>
+                        <li>地&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;址：
+                            <input type="text" name="address" id="address" placeholder="请输入你的地址"
+                                   value="{{ user.address }}" maxlength="42" minlength="42">
+                            <i class="error-tips"></i>
+                        </li>
+                        <li>公&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;钥：
+                            <input type="text" id="publickey" name="publickey"
+                                   value="{{ user.publickey|default_if_none:'' }}" maxlength="130" minlength="130">
+                            <i class="error-tips"></i>
+                        </li>
+                        <li>手&nbsp;&nbsp;机&nbsp;&nbsp;号：
+                            <input type="text" name="mobile" id="mobile" placeholder="请输入你的手机号码"
+                                   value="{{ request.user.mobile|default_if_none:'' }}" minlength="11" maxlength="11">
+                            <i class="error-tips"></i>
+                        </li>
+                        <li>邮&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;箱：
+                            <input class="borderno" type="text" name="email" readonly="readonly"
+                                   value="{{ request.user.email }}"/>
+                            <span class="green changeemai_btn" id="changeemai_btn">[修改]</span>
+                        </li>
+                        <li class="button heibtn">
+                            <input type="button" id="jsEditUserBtn" value="保存">
+                        </li>
+                    </ul>
+                    {% csrf_token %}
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block layui %}
+    <!--sidebar start-->
+    <section>
+        <ul class="sidebar">
+            {#         <li class="qq">#}
+            {#            <a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=2023525077&site=qq&menu=yes"></a>#}
+            {#        </li>#}
+            <li class="totop"></li>
+        </ul>
+    </section>
+    <!--sidebar end-->
+    <!--header start-->
+
+    <div class="dialog" id="jsDialog">
+        <div class="successbox dialogbox" id="jsSuccessTips">
+            <h1>成功提交</h1>
+            <div class="close jsCloseDialog"><img src="{% static 'images/dig_close.png' %}"/></div>
+            <div class="cont">
+                <h2>您的需求提交成功！</h2>
+                <p></p>
+            </div>
+        </div>
+        <!--提示弹出框-->
+        <div class="bidtips dialogbox promptbox" id="jsComfirmDialig">
+            <h1>确认提交</h1>
+            <div class="close jsCloseDialog"><img src="{% static 'images/dig_close.png' %}"/></div>
+            <div class="cont">
+                <h2>您确认提交吗？</h2>
+                <dd class="autoTxtCount">
+                    <div class="button">
+                        <input type="button" class="fl half-btn" value="确定" id="jsComfirmBtn"/>
+                        <span class="fr half-btn jsCloseDialog">取消</span>
+                    </div>
+                </dd>
+            </div>
+        </div>
+
+        <div class="resetpwdbox dialogbox changephone" id="updatekeyDialog" style="display: none;margin-top: 81px;">
+            <h1>生成新交易账户</h1>
+            <div class="close jsCloseDialog"><img src="{% static 'images/dig_close.png' %}"></div>
+            <p>注意，若生成新区块链交易账户，原有的将会被覆盖，若无区块链账户，请注册。原先购买的版权操作，如：退款、升级，需要使用购买账户操作</p>
+            <div class="cont">
+                <form id="jsupdatekeyForm" method="post" autocomplete="off" action="{% url 'users:update_key' %}">
+                    <div class="box">
+                        <span class="word2">账户密码</span>
+                        <input class="password" type="password" id="jsupdatekeyValue" name="value" autocomplete="off"
+                               placeholder="请输入交易账户密码">
+                    </div>
+                    <div class="box" id="jsRefreshCode">
+                        <span class="word2">验&nbsp;&nbsp;证&nbsp;&nbsp;码</span>
+                        {{ captcha_form.captcha }}
+                    </div>
+                    <div class="error" id="jsupdatekeyTips"></div>
+                    <div class="button">
+                        <input type="button" value="提交" id="jsupdatekeyBtn">
+                    </div>
+                    {% csrf_token %}
+                </form>
+            </div>
+        </div>
+
+
+        <div class="resetpwdbox dialogbox changephone" id="jsResetDialog">
+            <h1>修改密码</h1>
+            <div class="close jsCloseDialog"><img src="{% static 'images/dig_close.png' %}"/></div>
+            <p>请输入新的密码</p>
+            <div class="cont">
+                <form id="jsResetPwdForm" autocomplete="off">
+                    <div class="box">
+                        <span class="word2">新&nbsp;&nbsp;密&nbsp;&nbsp;码</span>
+                        <input type="password" id="pwd" name="password1" placeholder="6-20位非中文字符" autocomplete="off"/>
+                    </div>
+                    <div class="box">
+                        <span class="word2">确定密码</span>
+                        <input type="password" id="repwd" name="password2" placeholder="6-20位非中文字符" autocomplete="off"/>
+                    </div>
+                    <div class="error btns" id="jsResetPwdTips"></div>
+                    <div class="button">
+                        <input id="jsResetPwdBtn" type="button" value="提交"/>
+                    </div>
+                    {% csrf_token %}
+                </form>
+            </div>
+        </div>
+
+        <div class="dialogbox changeemai1 changephone" id="jsChangePhoneDialog">
+            <h1>修改邮箱</h1>
+            <div class="close jsCloseDialog"><img src="{% static 'images/dig_close.png' %}"/></div>
+            <p>请输入新的邮箱地址</p>
+            <form id="jsChangeEmailForm" autocomplete="off">
+                <div class="box">
+                    <input class="fl change_email" name="email" id="jsChangeEmail" type="text"
+                           placeholder="输入重新绑定的邮箱地址">
+                </div>
+                <div class="box">
+                    <input class="fl email_code" type="text" id="jsChangeEmailCode" name="code" placeholder="输入邮箱验证码">
+                    <input class="getcode getting" type="button" id="jsChangeEmailCodeBtn" value="获取验证码">
+                </div>
+                <div class="error btns change_email_tips" id="jsChangeEmailTips">请输入...</div>
+                <div class="button">
+                    <input class="changeemai_btn" id="jsChangeEmailBtn" type="button" value="完成"/>
+                </div>
+                {% csrf_token %}
+            </form>
+        </div>
+
+        <div class="noactivebox dialogbox" id="jsUnactiveForm">
+            <h1>邮件验证提示</h1>
+            <div class="close jsCloseDialog"><img src="{% static 'images/dig_close.png' %}"/></div>
+            <div class="center">
+                <img src="{% static 'images/send.png' %}"/>
+                <p>我们已经向您的邮箱<span class="green" id="jsEmailToActive">12@13.com</span>发送了邮件，<br/>为保证您的账号安全，请及时验证邮箱</p>
+                <p class="a"><a class="btn" id="jsGoToEmail" target="_blank" href="http://mail.qq.com">去邮箱验证</a></p>
+                <p class="zy_success upmove"></p>
+                <p style="display: none;" class="sendE2">没收到，您可以查看您的垃圾邮件和被过滤邮件，也可以再次发送验证邮件（<span class="c5c">60s</span>）
+                </p>
+                <p class="sendE">没收到，您可以查看您的垃圾邮件和被过滤邮件，<br/>也可以<span class="c5c green" id="jsSenEmailAgin"
+                                                                     style="cursor: pointer;">再次发送验证邮件</span></p>
+            </div>
+        </div>
+        <div class="resetpassbox dialogbox" id="jsSetNewPwd">
+            <h1>重新设置密码</h1>
+            <div class="close jsCloseDialog"><img src="{% static 'images/dig_close.png' %}"/></div>
+            <p class="green">请输入新密码</p>
+            <form id="jsSetNewPwdForm">
+                <div class="box">
+                    <span class="word2">密&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;码</span>
+                    <input type="password" name="password" id="jsResetPwd" placeholder="请输入新密码" autocomplete="off"/>
+                </div>
+                <div class="box">
+                    <span class="word2">确&nbsp;认&nbsp;密&nbsp;码</span>
+                    <input type="password" name="password2" id="jsResetPwd2" placeholder="请再次输入新密码" autocomplete="off"/>
+                </div>
+                <div class="box">
+                    <span class="word2">验&nbsp;&nbsp;证&nbsp;&nbsp;码</span>
+                    <input type="text" name="code" id="jsResetCode" placeholder="请输入手机验证码"/>
+                </div>
+                <div class="error btns" id="jsSetNewPwdTips"></div>
+                <div class="button">
+                    <input type="hidden" name="mobile" id="jsInpResetMobil"/>
+                    <input id="jsSetNewPwdBtn" type="button" value="提交"/>
+                </div>
+            </form>
+        </div>
+        <div class="resetpwdbox dialogbox changephone" id="jsproductorkeybox">
+            <h1>成为版权发布者</h1>
+            <div class="close jsCloseDialog"><img src="{% static 'images/dig_close.png' %}"/></div>
+            <p>请阅读相关条款</p>
+            <div class="cont">
+                <form id="jsproductorkeyForm" autocomplete="off">
+                    <div>
+                        <div style="float: left;height: 20px;width: 340px"><a
+                                href="http://www.ncac.gov.cn/chinacopyright/contents/479/17542.html" target="_blank">中华人民共和国著作权法</a>
+                        </div>
+                        <div style="float: left;height: 20px;width: 340px"><a
+                                href="http://www.gov.cn/gongbao/content/2011/content_1860739.htm" target="_blank">中华人民共和国著作权法实施细则</a>
+                        </div>
+                        <div style="float: left;height: 20px;width: 340px"><a
+                                href="http://www.cac.gov.cn/2013-02/08/c_126468776.htm" target="_blank">信息网络传播权保护条例</a>
+                        </div>
+                        <div style="float: left;height: 20px;width: 340px"><a
+                                href="http://www.sipo.gov.cn/zcfg/zcfgflfg/flfgbq/xzfg_bq/1063538.htm" target="_blank">著作权集体管理条例</a>
+                        </div>
+                        <div style="float: left;height: 20px;width: 340px"><a
+                                href="https://baike.baidu.com/item/%E7%BD%91%E7%BB%9C%E4%BA%A4%E6%98%93%E7%AE%A1%E7%90%86%E5%8A%9E%E6%B3%95/13019918?fr=aladdin"
+                                target="_blank">网络交易管理办法</a></div>
+                        <div style="float: left;height: 20px;width: 340px"><a href="" target="_blank">区块链音乐版权平台须知</a>
+                        </div>
+
+                    </div>
+
+                    <div class="error btns" id="jsproductorkeyboxtips"></div>
+                    <div class="button">
+                        <input id="jsproductorkeyBtn" type="button" value="同意相关条款，成为版权发布者"/>
+                    </div>
+                    {% csrf_token %}
+                </form>
+            </div>
+        </div>
+        <div class="resetpwdbox dialogbox changephone" id="jsproductorkeyexitbox">
+            <h1>退出版权发布者</h1>
+            <div class="close jsCloseDialog"><img src="{% static 'images/dig_close.png' %}"/></div>
+            <p>必须满足下列条件</p>
+            <div class="cont">
+                <form id="jsproductorkeyexitbox" autocomplete="off">
+                    <div>
+                        <div style="float: left;height: 20px;width: 340px">
+                            下架所有版权
+                        </div>
+                        <div style="float: left;height: 20px;width: 340px">
+                            最后的一个交易订单结束七天后
+                        </div>
+
+                    </div>
+
+                    <div class="error btns" id="jsproductorkeyexitboxtips"></div>
+                    <div class="button">
+                        <input id="jsproductorkeyexitBtn" type="button" value="退还押金"/>
+                    </div>
+                    {% csrf_token %}
+                </form>
+            </div>
+        </div>
+
+    </div>
+    <div class="bg" id="dialogBg"></div>
+{% endblock %}
+{% block custom_js %}
+    <script src="{% static 'js/validate.js' %}" type="text/javascript"></script>
+    <script type="text/javascript" src="{% static 'js/blockchainjs/web3.mini.js' %}"></script>
+    <script type="text/javascript" src='{% static 'js/blockchainjs/abi_addr.js' %}'></script>
+    <script src="{% static 'js/deco-user.js' %}" charset="UTF-8"></script>
+
+{% endblock %}

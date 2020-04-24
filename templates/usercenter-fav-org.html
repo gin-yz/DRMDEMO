@@ -1,0 +1,104 @@
+{% extends 'usercenter-base.html' %}
+{% block title %}我的收藏- 区块链音乐版权平台{% endblock %}
+{% load staticfiles %}
+{% block custom_bread %}
+    <section>
+        <div class="wp">
+            <ul class="crumbs">
+                <li><a href="{% url 'index' %}">首页</a>></li>
+                <li><a href="{% url 'users:info' %}">个人中心</a>></li>
+                <li>我的收藏</li>
+            </ul>
+        </div>
+    </section>
+{% endblock %}
+
+{% block rigt_form %}
+    <div class="right">
+        <div class="personal_des Releasecont">
+            <div class="head">
+                <h1>我的收藏</h1>
+            </div>
+
+        </div>
+        <div class="personal_des permessage">
+            <div class="head">
+                <ul class="tab_header messagehead">
+                    <li class="active"><a href="{% url 'users:myfav' %}">音乐</a></li>
+                    <li><a href="{% url 'users:myfav_musician' %}">音乐人 </a></li>
+                </ul>
+            </div>
+            <div class="companycenter">
+                <div class="group_list brief">
+                    {% for music in music_list.object_list %}
+                        <div class="module1_5 box">
+                            <a href="{% url 'music:detail' music.id %}">
+                                <img width="214" height="214" src="{{ music.image.url }}" style="height: 214px"/>
+                            </a>
+                            <div class="desdemo2">
+                                <a href="{% url 'music:detail' music.id %}">
+                                    <h2>{{ music.music_name }}</h2>
+                                </a>
+                                <span class="fl" style="width: 214px;height:24px;overflow: hidden">流派：{% for tag in music.music_tag %}
+                                    {{ tag.show_name }}
+                                {% endfor %}</span>
+                                <span class="fl3">价格(ETH)：{{ music.music_price1 }}&nbsp;&nbsp;起&nbsp;</span>
+                                <span class="fr">购买人数：{{ music.all_sell_count }}&nbsp;&nbsp;</span>
+
+                            </div>
+                            <div class="bottom">
+                                <span class="fl">{{ music.owner.nick_name }}</span>
+                                <span class="delete-group fr jsDeleteFav_music" data-favid="{{ music.id }}"></span>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+          <div class="pageturn">
+                <ul class="pagelist">
+                    {% if music_list.has_previous %}
+                        <li class="long"><a href="?{{ music_list.previous_page_number.querystring }}">上一页</a></li>
+                    {% endif %}
+
+                    {% for page in music_list.pages %}
+                        {% if page %}
+                            {% ifequal page music_list.number %}
+                                <li class="active"><a href="?{{ page.querystring }}">{{ page }}</a></li>
+                            {% else %}
+                                <li><a href="?{{ page.querystring }}" class="page">{{ page }}</a></li>
+                            {% endifequal %}
+                        {% else %}
+                            <li class="none">...</li>
+                        {% endif %}
+                    {% endfor %}
+                    {% if music_list.has_next %}
+                        <li class="long"><a href="?{{ music_list.next_page_number.querystring }}">下一页</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+    </div>
+{% endblock %}
+
+{% block custom_js %}
+    <script type="text/javascript">
+        $('.jsDeleteFav_music').on('click', function () {
+            var _this = $(this),
+                favid = _this.attr('data-favid');
+            $.ajax({
+                cache: false,
+                type: "POST",
+                url: "{% url 'op:fav' %}",
+                data: {
+                    fav_type: 1,
+                    fav_id: favid,
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                },
+                async: true,
+                success: function (data) {
+                    Dml.fun.winReload();
+                }
+            });
+        });
+    </script>
+{% endblock %}

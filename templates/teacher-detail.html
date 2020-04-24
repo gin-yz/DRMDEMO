@@ -1,0 +1,295 @@
+{% extends 'teacherbase.html' %}
+{% load staticfiles %}
+{% block title %}音乐人列表页-区块链音乐版权平台{% endblock %}
+{% block custom_bread %}
+    <section>
+        <div class="wp">
+            <ul class="crumbs">
+                <li><a href="{% url 'index' %}">首页</a>></li>
+                <li><a href="{% url 'musician' %}">音乐人</a>></li>
+                <li>音乐人详情</li>
+            </ul>
+        </div>
+    </section>
+{% endblock %}
+{% block content %}
+    <section>
+        <div class="wp butler-detail-box butler-diaryd-box clearfix">
+            <div class="fl list">
+                <div class="butler_detail_list clearfix">
+                    <div class="brief">
+                        <dl class="des">
+                            <dt>
+                                <div class="picpic">
+                                    <img width="100" height="100" src="{{ musician.image.url }}"/>
+                                </div>
+                                <div class="btn">
+                                <span class="fl btn1 collectionbtn" id="jsLeftBtn">
+                                     {% if musician_fav %}已收藏{% else %}收藏{% endif %}
+                                </span>
+{#                                    <span class="fr btn2 shareBtn bdsharebuttonbox"#}
+{#                                          data-text="授课教师-{{ teacher.name }}-慕学网"#}
+{#                                          data-desc="我在#慕课网#发现了#{{ teacher.name }}#"#}
+{#                                          data-comment="{{ teacher.name }}，工作年限：{{ teacher.work_years }}年；学历：本科；所在公司：阿里巴巴&nbsp;；经典案例：django入门和深入；flask入门"#}
+{#                                          data-url="{% url 'musician_detail' musician.id %}">#}
+{#                                    <span class="fl">分享</span>#}
+                                    <a href="#" class="bds_more" data-cmd="more"></a>
+                                </span>
+                                </div>
+                            </dt>
+                            <dd>
+                                <a href="{% url 'musician_detail' musician.id %}">
+                                    <h1>{{ musician.nick_name }}<span class="key picbig">已认证</span></h1>
+                                </a>
+                                <ul class="cont">
+                                    <li>作曲数：<span>{% if musician.get_all_music_num > 0 %}
+                                        {{ musician.get_all_music_num }}
+                                        首{% else %}
+                                        无{% endif %}</span></li>
+                                    <li>歌曲销量：<span>{% if musician.get_all_sell_num > 0 %}{{ musician.get_all_sell_num }}
+                                        首{% else %}
+                                        无{% endif %}&nbsp;</span></li>
+                                    <li>作曲风格：<span>{{ musician.points }}</span></li>
+                                    <li>代表歌曲：<span>{% if musician.get_all_music_num > 0 %}
+                                        {% for music in musician.get_represent_music %}
+                                            <a href="{% url 'music:detail' music.id %}"> {{ music.music_name }}&nbsp;&nbsp;&nbsp;</a>
+                                        {% endfor %}
+                                    {% else %}
+                                        无{% endif %}</span></li>
+                                    <li>个人寄语：<span>{{ musician.description }}</span></li>
+                                </ul>
+                            </dd>
+                        </dl>
+                    </div>
+                </div>
+                <div class="butler_detail_cont clearfix">
+                    <div class="left layout">
+                        <div class="head">
+                            <ul class="tab_header">
+                                <li class="active"><a href="{% url 'musician_detail' musician.id %}">全部音乐</a></li>
+                            </ul>
+                        </div>
+                        <div class="companycenter">
+                            <div class="group_list brief">
+                                {% for music in music_list.object_list %}
+                                    <div class="box" style="height: auto">
+                                        <a href="{% url 'music:detail' music.id %}">
+                                            <img width="215" height="215" class="scrollLoading"
+                                                 src="{{ MEDIA_URL }}{{ music.image }}" style="height: 215px"/>
+                                        </a>
+                                        <div class="des">
+                                            <a href="{% url 'music:detail' music.id %}">
+                                                <h2>{{ music.music_name }}</h2>
+                                            </a>
+                                            <span class="fl">时长(秒)：<i >{{ music.music_times }}</i></span>
+                                            <span class="fr">购买人数：{{ music.all_sell_count }}&nbsp;&nbsp;</span>
+                                            <span class="fl2">流派：{% for tag in music.music_tag %}
+                                                {{ tag.show_name }}
+                                            {% endfor %}</span>
+
+                                        </div>
+                                        <div class="bottom">
+                                            <a href="{% url 'music:detail' music.id %}"><span
+                                                    class="fl">价格(ETH)：{{ music.music_price1 }}&nbsp;&nbsp;起</span></a>
+                                            <span class="star fr  notlogin" data-favid="15">{{ music.fav_nums }}</span>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                            <div class="pageturn" style="margin: 10px auto;">
+                                <ul class="pagelist">
+                                    {% if music_list.has_previous %}
+                                        <li class="long"><a href="?{{ music_list.previous_page_number.querystring }}">上一页</a>
+                                        </li>
+                                    {% endif %}
+
+                                    {% for page in music_list.pages %}
+                                        {% if page %}
+                                            {% ifequal page music_list.number %}
+                                                <li class="active"><a href="?{{ page.querystring }}">{{ page }}</a></li>
+                                            {% else %}
+                                                <li><a href="?{{ page.querystring }}" class="page">{{ page }}</a></li>
+                                            {% endifequal %}
+                                        {% else %}
+                                            <li class="none">...</li>
+                                        {% endif %}
+                                    {% endfor %}
+                                    {% if music_list.has_next %}
+                                        <li class="long"><a
+                                                href="?{{ music_list.next_page_number.querystring }}">下一页</a></li>
+                                    {% endif %}
+                                    {#                <li class="active"><a href="?page=1">1</a></li>#}
+                                    {#                <li><a href="?page=2" class="page">2</a></li>#}
+                                    {#                <li><a href="?page=3" class="page">3</a></li>#}
+                                    {#                <li class="long"><a href="?page=2">下一页</a></li>#}
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!--<div class="pageturn">-->
+                        <!--<ul class="pagelist">-->
+                        <!--<li class="active"><a href="?page=1">1</a></li>-->
+                        <!--</ul>-->
+                        <!--</div>-->
+                    </div>
+                </div>
+            </div>
+            <div class="fr list">
+                {#                <div class="butler_detail_list">#}
+                {#                    <div class="right butler-company-box">#}
+                {#                        <div class="head">#}
+                {#                            <h1>慕课网</h1>#}
+                {#                            <p>知名高校，权威教学</p>#}
+                {#                        </div>#}
+                {#                        <div class="pic">#}
+                {#                            <a href="{% url 'org:home' teacher.org.id %}">#}
+                {#                                <img width="150" height="80" src="{{ teacher.org.image.url }}"/>#}
+                {#                            </a>#}
+                {#                        </div>#}
+                {#                        <a href="{% url 'org:home' teacher.org.id %}">#}
+                {#                            <h2 class="center">{{ teacher.org.name }}</h2>#}
+                {#                        </a>#}
+                {#                        <p class="center tell">地址：{{ teacher.org.address }}</p>#}
+                {#                        <a class="btn" id="jsRightBtn">{% if org_fav %}已收藏{% else %}收藏{% endif %}</a>#}
+                {#                    </div>#}
+                {#                </div>#}
+                <div class="butler_detail_cont">
+                    <div class="butler_list_box">
+                        <div class="right layout">
+                            <div class="head">音乐人排行榜</div>
+                            {% for musician in hot_musicians %}
+                                <dl class="des">
+                                    <span class="num fl">{{ forloop.counter }}</span>
+                                    <a href="{% url 'musician_detail' musician.id %}">
+                                        <dt>
+                                            <img width="50" height="50" class="scrollLoading"
+                                                 src="{{ musician.image.url }}"/>
+                                        </dt>
+                                    </a>
+                                    <dd>
+                                        <a href="{% url 'musician_detail' musician.id %}">
+                                            <h1 title="{{ musician.nick_name }}"
+                                                style="overflow: hidden;width: 150px;height: 19px">{{ musician.nick_name }}</h1>
+                                        </a>
+                                        <p>销量： <span>{% if musician.get_all_sell_num > 0 %}
+                                            {{ musician.get_all_sell_num }}
+                                        {% else %}
+                                            无{% endif %}</span></p>
+                                        <p>粉丝数：<span>{% if musician.fav_nums > 0 %}{{ musician.fav_nums }}人{% else %}
+                                            无{% endif %}</span></p>
+                                    </dd>
+                                </dl>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+{% block custom_js %}
+    <script type="text/javascript">
+        //收藏分享
+        function add_fav(current_elem, fav_id, fav_type) {
+            $.ajax({
+                cache: false,
+                type: "POST",
+                url: "{% url 'op:fav' %}",
+                data: {'fav_id': fav_id, 'fav_type': fav_type},
+                async: true,
+                beforeSend: function (xhr, settings) {
+                    xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
+                },
+                success: function (data) {
+                    if (data.status == 'fail') {
+                        if (data.msg == '用户未登录') {
+                            window.location.href = "{% url 'login' %}";
+                        } else {
+                            alert(data.msg)
+                        }
+
+                    } else if (data.status == 'success') {
+                        current_elem.text(data.msg)
+                    }
+                },
+            });
+        }
+
+        $(document).ready(function () {
+            $('#jsLeftBtn').on('click', function () {
+                add_fav($(this), {{ musician.id }}, 2);
+            });
+        });
+        {#$(document).ready(function () {#}
+        {#    $('#jsRightBtn').on('click', function () {#}
+        {#        add_fav($(this), {{ teacher.org.id }}, 2);#}
+        {#    });#}
+        {#})
+        ;
+        #}
+
+
+    </script>
+    <script>
+        var shareUrl = '',
+            shareText = '',
+            shareDesc = '',
+            shareComment = '';
+        $(function () {
+            $(".bdsharebuttonbox a").mouseover(function () {
+                var type = $(this).attr('data-cmd'),
+                    $parent = $(this).parent('.bdsharebuttonbox'),
+                    fxurl = $parent.attr('data-url'),
+                    fxtext = $parent.attr('data-text'),
+                    fxdesc = $parent.attr('data-desc'),
+                    fxcomment = $parent.attr('data-comment');
+                switch (type) {
+                    case 'tsina':
+                    case 'tqq':
+                    case 'renren':
+                        shareUrl = fxurl;
+                        shareText = fxdesc;
+                        shareDesc = '';
+                        shareComment = '';
+                        break;
+                    default :
+                        shareUrl = fxurl;
+                        shareText = fxtext;
+                        shareDesc = fxdesc;
+                        shareComment = fxcomment;
+                        break;
+                }
+            });
+        });
+
+        function SetShareUrl(cmd, config) {
+            if (shareUrl) {
+                config.bdUrl = "{{ SITE_URL }}" + shareUrl;
+            }
+            if (shareText) {
+                config.bdText = shareText;
+            }
+            if (shareDesc) {
+                config.bdDesc = shareDesc;
+            }
+            if (shareComment) {
+                config.bdComment = shareComment;
+            }
+
+            return config;
+        }
+
+        window._bd_share_config = {
+            "common": {
+                "onBeforeClick": SetShareUrl,
+                "bdMini": "2",
+                "searchPic": "1",
+                "bdMiniList": false
+            },
+            "share": {
+                "bdSize": "16"
+            }
+        };
+        with (document) 0[(getElementsByTagName('head')[0] || body).appendChild(createElement('script')).src = 'http://bdimg.share.baidu.com/static/api/js/share.js?cdnversion=' + ~(-new Date() / 36e5)];
+    </script>
+{% endblock %}

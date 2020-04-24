@@ -1,0 +1,143 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %}首页-区块链音乐版权平台{% endblock %}
+{% block content %}
+    <div class="banner">
+        <div class="wp">
+            <div class="fl">
+                <div class="imgslide">
+                    <ul class="imgs">
+                        {% for banner in banners_top %}
+                            <li>
+                                <a href="{{ banner.url }}">
+                                    <img width="1200" height="478" src="{{ banner.image.url }}"/>
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="unslider-arrow prev"></div>
+                <div class="unslider-arrow next"></div>
+            </div>
+
+        </div>
+
+
+    </div>
+    <section>
+        <div class="wp">
+            <ul class="feature">
+                <li class="feature1"><a href="{% url 'music:musiclist' %}?sort=hot">
+                    <img class="pic" src="{% static 'images/reform/middlefinal1.png' %}"/>
+                    <p class="center">热门音乐</p></a>
+                </li>
+                <li class="feature2"><a href="{% url 'musician' %}?sort=hot">
+                    <img class="pic" src="{% static 'images/reform/middlefinal2.png' %}"/>
+                    <p class="center">热门音乐人</p></a>
+                </li>
+                <li class="feature3"><a href="">
+                    <img class="pic" src="{% static 'images/reform/middlefinal3.png' %}"/>
+                    <p class="center">使用说明</p></a>
+                </li>
+                <li class="feature4"><a href="">
+                    <img class="pic" src="{% static 'images/reform/middlefinal4.png' %}"/>
+                    <p class="center">联系我们</p></a>
+                </li>
+            </ul>
+        </div>
+    </section>
+    <section>
+        <div class="module">
+            <div class="wp">
+                <h1>热门音乐</h1>
+                <div class="module1 eachmod">
+                    <div class="module1_1 left">
+                        <img width="228" height="614" src="{% static 'images/reform/footfianl1.jpg' %}"/>
+                        <p class="fisrt_word">天籁之音<br/>信手拈来</p>
+                        <a class="more" href="{% url 'music:musiclist' %}">发现更多歌曲 ></a>
+                    </div>
+                    <div class="right group_list">
+                        <div class="module1_2 box">
+                            <div class="imgslide2">
+                                <ul class="imgs">
+                                    {% for banner_music in banner_musics %}
+                                        <li>
+                                            <a href="{{ banners_music.url }}">
+                                                <img width="470" height="300" src="{{ banner_music.image.url }}"/>
+                                            </a>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                            <div class="unslider-arrow2 prev"></div>
+                            <div class="unslider-arrow2 next"></div>
+                        </div>
+                        {% for music in recommand_musics %}
+                            <div class="module1_{{ forloop.counter|add:2 }} box">
+                                <a href="{% url 'music:detail' music.id %}">
+                                    <img width="233" height="233" src="{{ music.image.url }}" style="height: 233px"/>
+                                </a>
+                                <div class="des">
+                                    <a href="{% url 'music:detail' music.id %}">
+                                        <h2 title="{{ music.music_name }}"
+                                            style="line-height: 35px;text-align: center">{{ music.music_name }}</h2>
+                                    </a>
+                                </div>
+                                <div class="bottom">
+                                    <span class="fl" title="">来自：{{ music.owner.nick_name }}</span>
+                                    <span class="star fr">{{ music.fav_nums }}</span>
+                                </div>
+                            </div>
+                        {% endfor %}
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section>
+        <div class="module greybg">
+            <div class="wp">
+                <h1>热门音乐人</h1>
+                <div class="module3 eachmod">
+                    <div class="module3_1 left">
+                        <img width="228" height="463" src="{% static 'images/reform/footfianl3.jpg' %}"/>
+                        <p class="fisrt_word">顶级歌手<br/>纷纷进驻</p>
+                        <a class="more" href="{% url 'musician' %}">发现更多明星></a>
+                    </div>
+                    <div class="right">
+                        <ul>
+                            {% for user in users %}
+                                <li class="{% if forloop.counter|divisibleby:7 %}seven{% endif %}">
+                                    <a href="{% url 'musician_detail' user.id %}">
+                                        <div class="company">
+                                            <img width="130" height="130" src="{{ user.image.url }}"/>
+                                            <div class="score">
+                                                <div class="circle">
+                                                    <h2>{{ user.nick_name }}</h2>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {#                                        <p><span class="key" title="{{ user.nick_name }}">{{ user.nick_name }}</span></p>#}
+                                    </a>
+                                </li>
+                            {% endfor %}
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+{% endblock %}
+{% block custom_js %}
+    <script src="{% static 'js/selectUi.js' %}" type='text/javascript'></script>
+    <script src="{% static 'js/deco-common.js' %}" type='text/javascript'></script>
+    <script type="text/javascript" src="{% static 'js/plugins/laydate/laydate.js' %}"></script>
+    <script src="{% static  'js/plugins/layer/layer.js' %}"></script>
+    <script src="{% static 'js/plugins/queryCity/js/public.js' %}" type="text/javascript"></script>
+    <script src="{% static 'js/unslider.js' %}" type="text/javascript"></script>
+    <script src="{% static 'js/plugins/jquery.scrollLoading.js' %}" type="text/javascript"></script>
+    <script type="text/javascript" src="{% static 'js/index.js' %}"></script>
+{% endblock %}

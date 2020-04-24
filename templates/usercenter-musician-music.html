@@ -1,0 +1,276 @@
+{% extends 'usercenter-base.html' %}
+{% block title %}我的音乐- 区块链音乐版权平台{% endblock %}
+{% load staticfiles %}
+{% block custom_bread %}
+    <section>
+        <div class="wp">
+            <ul class="crumbs">
+                <li><a href="{% url 'index' %}">首页</a>></li>
+                <li><a href="{% url 'users:info' %}">个人中心</a>></li>
+                <li>我发布的音乐版权</li>
+            </ul>
+        </div>
+    </section>
+{% endblock %}
+
+{% block rigt_form %}
+    <div class="right">
+        <div class="personal_des Releasecont">
+            <div class="head">
+                <h1>我发布的音乐版权</h1>
+            </div>
+        </div>
+        <div class="personal_des permessage">
+
+            <div class="messagelist">
+                {% for my_music in all_my_musics.object_list %}
+                    <div class=" butler_list butler-fav-box">
+
+                        <dt>
+                            <div class="topdemo">&nbsp;&nbsp;&nbsp;&nbsp;上链时间：{{ my_music.add_time }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;交易hash：{{ my_music.music_transactionHash }}</div>
+                            <dl class="des users">
+                                <dt>
+
+                                    <a href="{% url 'music:detail' my_music.id %}">
+                                        <img width="100" height="100" src="{{ my_music.image.url }}"/>
+                                    </a>
+                                </dt>
+
+                                <dd>
+                                    <div class="demoone2">
+                                        <div class="h2demo">
+                                            <a href="{% url 'music:detail' my_music.id %}">
+                                                <div style="width: 150px">{{ my_music.music_name }}</div>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div style="height: 15px"></div>
+                                    <ul class="cont clearfix">
+                                        <li class="">价格ETH</li>
+                                        <li class="">1:<span>{{ my_music.music_price1 }}</span></li>
+                                        <li class="">2:<span>{{ my_music.music_price2 }}</span></li>
+                                        <li class="">3:<span>{{ my_music.music_price3 }}</span></li>
+                                        <li class="">4:<span>{{ my_music.music_price4 }}</span></li>
+                                        <li class="">5:<span>{{ my_music.music_price5 }}</span></li>
+                                        <li class="">6:<span>{{ my_music.music_price6 }}</span></li>
+                                    </ul>
+                                    <ul class="cont clearfix">
+                                        <li class="">上链ID：<span>{{ my_music.music_bcId }}</span></li>
+                                        <li class="">版权状态：<span>{% ifequal my_music.music_status 0 %}
+                                            已下架{% endifequal %}{% ifequal my_music.music_status 1 %}
+                                            仍在出售{% endifequal %}{% ifequal my_music.music_status 2 %}
+                                            正在核对信息{% endifequal %}</span></li>
+                                        <li class="">版权盈利(ETH)：<span>{{ my_music.all_sell_money |floatformat:5 }}</span>
+                                        </li>
+                                    </ul>
+                                    <ul class="cont clearfix">
+                                        <li class="">版权售出数量：<span>{{ my_music.all_sell_count }}</span></li>
+                                        <li class="">版权收藏人数：<span>{{ my_music.fav_nums }}</span></li>
+                                        <li class="">版权点击数：<span>{{ my_music.click_nums }}</span></li>
+                                    </ul>
+
+                                </dd>
+                                <div class="rightdemo">
+                                    <button class="btndemo" onclick="musicdetailbtn({{ my_music.id }})">版权上链信息</button>
+                                    <button class="btndemo" onclick="musicsolddetailbtn({{ my_music.music_bcId }})">
+                                        版权售出详情
+                                    </button>
+                                    {% ifequal my_music.music_status 1 %}
+                                        <button class="btndemo" onclick="musicmoditybtn({{ my_music.music_bcId }},0)">
+                                            下架版权
+                                        </button>
+                                    {% else %}
+                                        <button class="btndemo" onclick="musicmoditybtn({{ my_music.music_bcId }},1)">
+                                            上架版权
+                                        </button>
+                                    {% endifequal %}
+
+                                    <button class="btndemo"
+                                            onclick="modifyMyMusicbth({{ my_music.music_bcId }})">
+                                        版权详情修改
+                                    </button>
+
+
+                                </div>
+                            </dl>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="pageturn">
+            <ul class="pagelist">
+                {% if all_my_musics.has_previous %}
+                    <li class="long"><a href="?{{ all_my_musics.previous_page_number.querystring }}">上一页</a></li>
+                {% endif %}
+
+                {% for page in all_my_musics.pages %}
+                    {% if page %}
+                        {% ifequal page all_my_musics.number %}
+                            <li class="active"><a href="?{{ page.querystring }}">{{ page }}</a></li>
+                        {% else %}
+                            <li><a href="?{{ page.querystring }}" class="page">{{ page }}</a></li>
+                        {% endifequal %}
+                    {% else %}
+                        <li class="none">...</li>
+                    {% endif %}
+                {% endfor %}
+                {% if all_my_musics.has_next %}
+                    <li class="long"><a href="?{{ all_my_musics.next_page_number.querystring }}">下一页</a></li>
+                {% endif %}
+
+            </ul>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block custom_js %}
+    <script type="text/javascript" src="{% static 'js/blockchainjs/web3.mini.js' %}"></script>
+    <script type="text/javascript" src='{% static 'js/blockchainjs/abi_addr.js' %}'></script>
+    <script type="text/javascript">
+        function httpPost(URL, PARAMS, method) {
+            var temp = document.createElement("form");
+            temp.action = URL;
+            temp.method = method;
+            temp.style.display = "none";
+
+            for (var x in PARAMS) {
+                var opt = document.createElement("textarea");
+                opt.name = x;
+                opt.value = PARAMS[x];
+                temp.appendChild(opt);
+            }
+
+            document.body.appendChild(temp);
+            temp.submit();
+
+            return temp;
+        }
+
+        function musicdetailbtn(music_id) {
+            var params = {
+                "id": music_id,
+            };
+            httpPost('/users/musicianmusicdetial/', params, 'get');
+        }
+
+        function musicsolddetailbtn(music_id) {
+            var formdata = new FormData();
+            formdata.append('music_id', music_id);
+            formdata.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+            $.ajax({
+                cache: false,
+                type: 'post',
+                url: "/users/musicianmusicsolddetial/",
+                data: formdata,
+                async: true,
+                processData: false,    // 不处理数据
+                contentType: false,    // 不设置内容类型
+                success: function (data) {
+                    console.log(data);
+                    if (data.status == 'success') {
+                        alert("您的请求已受理，系统查询后发至您的邮箱，请注意查收！")
+                    }else if (data.status == 'fail') {
+                        alert(data.msg);
+                    }
+                }
+            });
+
+        }
+
+        function downloadkeybth(music_id) {
+            var formdata = new FormData();
+            formdata.append('music_id', music_id);
+            formdata.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+            $.ajax({
+                cache: false,
+                type: 'post',
+                url: "/users/downloadkey/",
+                data: formdata,
+                async: true,
+                processData: false,    // 不处理数据
+                contentType: false,    // 不设置内容类型
+                success: function (data) {
+                    console.log(data);
+                    if (data.status == 'success') {
+                        window.open('http://127.0.0.1:8080/ipfs/' + data.msg)
+                        return;
+                    } else if (data.status == 'fail') {
+                        alert(data.msg);
+                        return;
+                    }
+                }
+            });
+        }
+
+        function downloadbth(ipfshash) {
+            window.open('http://127.0.0.1:8080/ipfs/' + ipfshash)
+        }
+        function modifyMyMusicbth(id) {
+            var url = '{% url 'music:modifymymuiscinfo'%}'+'?id='+id;
+            window.open(url,'','width=1155px,height=700px,top=50,left=300,resizable=no,location=no,menubar=no,status=no')
+        }
+        function musicmoditybtn(music_bcId, permit) {
+            if (ethereum.selectedAddress == undefined) {
+                alert('请登录METAMASK！');
+
+                async function testAsync() {
+                    const accounts = await ethereum.enable();
+                    return accounts;
+                }
+
+                const account = testAsync();
+                return;
+            }
+            if (ethereum.networkVersion != 428) {
+                alert('请切换网到http://428');
+                return;
+            }
+            if (ethereum.selectedAddress != '{{ request.user.address }}'.toLowerCase()) {
+                alert('付款钱包与账户钱包不一致');
+                return;
+            }
+
+            web3 = new Web3(web3.currentProvider);
+            var MyContract = new web3.eth.Contract(abi, addresss);
+            MyContract.methods.modifyProductToStorage(music_bcId, permit).send({
+                from: ethereum.selectedAddress,
+            })
+                .on('transactionHash', function (hash) {
+                    alert('修改成功,请等待后台处理，若有疑问，请联系管理员')
+                    window.location.reload()
+                })
+                .on('receipt', function (receipt) {
+
+                })
+                .on('confirmation', function (confirmationNumber, receipt) {
+
+                })
+                .on('error', function (error, receipt) {
+
+                })
+
+        }
+
+        $('.jsDeleteFav_teacher').on('click', function () {
+            var _this = $(this),
+                favid = _this.attr('data-favid');
+            $.ajax({
+                cache: false,
+                type: "POST",
+                url: "",
+                data: {
+                    fav_type: 3,
+                    fav_id: favid,
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                },
+                async: true,
+                success: function (data) {
+                    Dml.fun.winReload();
+                }
+            });
+        });
+    </script>
+{% endblock %}
+
+

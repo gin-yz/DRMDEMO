@@ -1,0 +1,116 @@
+{% extends 'usercenter-base.html' %}
+{% block title %}版权中心- 区块链音乐版权平台{% endblock %}
+{% block custom_bread %}
+    <section>
+        <div class="wp">
+            <ul class="crumbs">
+                <li><a href="{% url 'index' %}">首页</a>></li>
+                <li><a href="{% url 'users:info' %}">个人中心</a>></li>
+                <li>我的版权中心</li>
+            </ul>
+        </div>
+    </section>
+{% endblock %}
+
+{% block rigt_form %}
+    <div class="right companycenter layout grouping">
+        <div class="head">
+            <h1>版权信息中心</h1>
+        </div>
+        <div class="brief group_list">
+            <div class="inforcon1">
+                <ul class="right1">
+                    <li>我被点击数：<span style="color: black">{{ user.click_nums }}</span>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;我被收藏数：<span
+                                style="color: black">{{ user.fav_nums }}</span>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;我的热度：<span
+                                style="color: black">{{ user.hot_num }}</span>
+                    </li>
+                    <li>
+                        我的音乐版权发布总数量：<span
+                            style="color: black">{{ user.get_all_music_num }}</span>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;我的音乐版权总销量：<span
+                            style="color: black">{{ user.get_all_sell_num }}</span>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;我的音乐版权销售总盈利(ETH)：<span
+                            style="color: black">{{ user.get_all_money|floatformat:5 }}</span>
+                    </li>
+                </ul>
+
+            </div>
+        </div>
+    </div>
+    <div class="right companycenter layout grouping">
+        <div class="head">
+            <h1>我的作曲信息</h1>
+            <a class="green fr more" onclick="modifyFreeStyle()">修改 > </a>
+        </div>
+        <div class="brief group_list">
+            <div class="inforcon1">
+                <ul class="right1">
+                    <li>我的作曲风格(<=20字)：<input id='points' value="{{ user.points }}" style="width: 300px;">
+                    </li>
+                    <li>我的个人描述(<=50字)：<input id='description' value="{{ user.description }}" style="width: 700px">
+                    </li>
+                </ul>
+
+            </div>
+        </div>
+    </div>
+    <div class="right companycenter layout grouping">
+        <div class="head">
+            <h1>我发布的音乐版权</h1>
+            <a class="green fr more" href="{% url 'users:musicianmusic' %}">查看更多 > </a>
+        </div>
+        <div class="brief group_list">
+            {% for music in all_musics %}
+                <div class="module1_5 box" style="height: 320px">
+                    <a href="{% url 'music:detail' music.id %}">
+                        <img width="214" height="214" src="{{ music.image.url }}" style="height: 214px"/>
+                    </a>
+                    <div class="desdemo2">
+                        <a href="{% url 'music:detail' music.id %}">
+                            <h2>{{ music.music_name }}</h2>
+                        </a>
+                        <span class="fl" style="height: 24px;overflow: hidden">流派：{% for tag in music.music_tag %}
+                            {{ tag.show_name }}
+                        {% endfor %}</span>
+                        <span class="fl3">销售金额(ETH)：{{ music.all_sell_money |floatformat:3 }}&nbsp;&nbsp;&nbsp;</span>
+                        <span class="fr">购买人数：{{ music.all_sell_count }}&nbsp;&nbsp;</span>
+                        <span class="fl4" style="top: 283px">被收藏数：{{ music.fav_nums }}&nbsp;&nbsp;&nbsp;</span>
+                        <span class="fr4 " style="top: 283px">热度：{{ music.hot_num | floatformat:1 }}&nbsp;&nbsp;</span>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+{% block custom_js %}
+    <script>
+
+        function modifyFreeStyle() {
+            var formdata = new FormData();
+            formdata.append('points',$("#points").val());
+            formdata.append('description',$("#description").val());
+            formdata.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+            $.ajax({
+                cache: false,
+                type: 'post',
+                url: "{% url 'users:modifyfreestyle' %}",
+                data: formdata,
+                async: true,
+                processData: false,    // 不处理数据
+                contentType: false,    // 不设置内容类型
+                success: function (data) {
+                    console.log(data);
+                    if (data.status == 'success') {
+                        alert(data.msg);
+                        window.location.reload();
+                    } else if (data.status == 'fail') {
+                        alert(data.msg);
+
+                    }
+                }
+             });
+        }
+    </script>
+{% endblock %}

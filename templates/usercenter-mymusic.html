@@ -1,0 +1,382 @@
+{% extends 'usercenter-base.html' %}
+{% load staticfiles %}
+{% block title %}我的音乐- 区块链音乐版权平台{% endblock %}
+{% load staticfiles %}
+{% block custom_bread %}
+    <section>
+        <div class="wp">
+            <ul class="crumbs">
+                <li><a href="{% url 'index' %}">首页</a>></li>
+                <li><a href="{% url 'users:info' %}">个人中心</a>></li>
+                <li>我的音乐</li>
+            </ul>
+        </div>
+    </section>
+{% endblock %}
+
+{% block rigt_form %}
+    <div class="right">
+        <div class="personal_des Releasecont">
+            <div class="head">
+                <h1>我的音乐</h1>
+            </div>
+        </div>
+        <div class="personal_des permessage">
+
+            <div class="messagelist">
+                {% for my_music in all_my_musics.object_list %}
+                    <div class=" butler_list butler-fav-box">
+
+                        <dt>
+                            <div class="topdemo">&nbsp;&nbsp;&nbsp;&nbsp;交易时间：{{ my_music.add_time }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{% ifequal my_music.purchase_status 6 %}{% else %}
+                                交易hash：{{ my_music.purchase_transactionHash }}{% endifequal %}
+                                {% ifequal my_music.check_time 1 %}
+                                    <span style="float: right;margin-right: 10px;cursor:pointer;"
+                                          title="未确认购买且交易未满二小时，可以退款"
+                                          onclick="refundMoney({{ my_music.purchase_bcId }})">退款</span>{% endifequal %}
+                            </div>
+                            <dl class="des users">
+                                <dt>
+
+                                    <a href="{% url 'music:detail' my_music.music.id %}">
+                                        <img width="100" height="100" src="{{ my_music.music.image.url }}"/>
+                                    </a>
+                                </dt>
+
+                                <dd>
+                                    <h1>
+                                        <div class="h1demo">
+                                            <a href="{% url 'music:detail' my_music.music.id %}">
+                                                <div style="width: 180px">{{ my_music.music.music_name }}</div>
+                                                <span
+                                                        class="key">来自：{{ my_music.music.owner.nick_name }}</span>
+                                            </a>
+                                        </div>
+                                    </h1>
+                                    <div style="height: 15px"></div>
+                                    <ul class="cont clearfix" style="margin-top: -15px">
+                                        <li class="">价格(Eth):<span>{{ my_music.music_price }}</span></li>
+                                        <li class="">版权权限：<span>{{ my_music.purchase_permission }}</span></li>
+                                    </ul>
+                                    <ul class="cont clearfix">
+                                        <li class="">上链ID：<span>{% ifequal my_music.purchase_status 6 %}无{% else %}
+                                            {{ my_music.purchase_bcId }}{% endifequal %}</span></li>
+                                        <li class="">版权状态：<span>{% ifequal my_music.purchase_status 0 %}
+                                            未付款{% endifequal %}{% ifequal my_music.purchase_status 1 %}
+                                            未确认购买{% endifequal %}{% ifequal my_music.purchase_status 2 %}
+                                            购买成功{% endifequal %}{% ifequal my_music.purchase_status 3 %}
+                                            已失效{% endifequal %}{% ifequal my_music.purchase_status 4 %}
+                                            升级失效{% endifequal %}{% ifequal my_music.purchase_status 6 %}
+                                            已退款{% endifequal %}{% ifequal my_music.purchase_status 911 %}
+                                            请联系管理员{% endifequal %}</span></li>
+                                    </ul>
+
+                                    <ul class="cont clearfix">
+                                        <li class="">版权剩余时间：<span>{{ my_music.get_vailtime }}</span></li>
+                                    </ul>
+                                {% ifequal my_music.purchase_permission 1 %}
+                                    {% else %}
+                                    <ul class="cont clearfix">
+                                        <li class="">授权项目名称：<span>{{ my_music.projectname }}</span></li>
+                                    </ul>
+                                {% endifequal %}
+
+
+                                </dd>
+                                <div class="rightdemo">
+                                    {% ifequal my_music.purchase_status 1 %}
+                                        <button class="btndemo" onclick="musicdetailbtn({{ my_music.id }})">链上购买详情
+                                        </button>
+                                    {% endifequal %}
+                                    {% ifequal my_music.purchase_status 2 %}
+                                        <button class="btndemo" onclick="musicdetailbtn({{ my_music.id }})">链上购买详情
+                                        </button>
+                                    {% endifequal %}
+                                    {% ifequal my_music.purchase_status 3 %}
+                                        <button class="btndemo" onclick="musicdetailbtn({{ my_music.id }})">链上购买详情
+                                        </button>
+                                    {% endifequal %}
+                                    {% ifequal my_music.purchase_status 4 %}
+                                        <button class="btndemo" onclick="musicdetailbtn({{ my_music.id }})">链上购买详情
+                                        </button>
+                                    {% endifequal %}
+                                    {#                                    <div style="height: 35px">{% ifequal my_vaild '0'%}无效版权{% else %}有效期:{{ my_vaild }}{% endifequal %}</div>#}
+                                    {% ifequal my_music.purchase_status 2 %}
+                                        {% ifequal my_music.purchase_permission 6 %}
+                                            <button class="btndemo"
+                                                    onclick="downloadbth('{{ my_music.music.music_hashLink }}')">
+                                                下载加密文件
+                                            </button>
+                                            <button class="btndemo" onclick="downloadkeybth({{ my_music.id }})">
+                                                下载密钥
+                                            </button>
+                                        {% else %}
+
+                                            <button class="btndemo"
+                                                    onclick="updateperbth({{ my_music.id }})">升级权限
+                                            </button>
+                                            <button class="btndemo"
+                                                    onclick="downloadbth('{{ my_music.music.music_hashLink }}')">
+                                                下载加密文件
+                                            </button>
+                                            <button class="btndemo" onclick="downloadkeybth({{ my_music.id }})">
+                                                下载密钥
+                                            </button>
+
+                                        {% endifequal %}
+                                    {% endifequal %}
+
+                                    {% ifequal my_music.purchase_status 1 %}
+                                        {% ifequal my_music.purchase_permission 6 %}
+                                            <button class="btndemo"
+                                                    onclick="downloadbth('{{ my_music.music.music_demoLink }}')">
+                                                下载试听文件
+                                            </button>
+                                            <button class="btndemo" onclick="downloadkeybth({{ my_music.id }})">
+                                                确认购买
+                                            </button>
+                                        {% else %}
+
+                                            <button class="btndemo"
+                                                    onclick="downloadbth('{{ my_music.music.music_demoLink }}')">
+                                                下载试听文件
+                                            </button>
+                                            <button class="btndemo" onclick="downloadkeybth({{ my_music.id }})">
+                                                确认购买
+                                            </button>
+
+                                        {% endifequal %}
+                                    {% endifequal %}
+                                    {% ifequal my_music.purchase_status 0 %}
+                                        <button class="btndemo"
+                                                onclick="purchasebth({{ my_music.id }},{{ my_music.music.music_bcId }},
+                                                        {{ my_music.purchase_permission }},{{ my_music.music_price }})">
+                                            付款购买
+                                        </button>
+                                    {% endifequal %}
+
+                                </div>
+                                <div class="delete jsDeleteFav_teacher" data-favid="{{ teacher.id }}"></div>
+                            </dl>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="pageturn">
+            <ul class="pagelist">
+                {% if all_my_musics.has_previous %}
+                    <li class="long"><a href="?{{ all_my_musics.previous_page_number.querystring }}">上一页</a></li>
+                {% endif %}
+
+                {% for page in all_my_musics.pages %}
+                    {% if page %}
+                        {% ifequal page all_my_musics.number %}
+                            <li class="active"><a href="?{{ page.querystring }}">{{ page }}</a></li>
+                        {% else %}
+                            <li><a href="?{{ page.querystring }}" class="page">{{ page }}</a></li>
+                        {% endifequal %}
+                    {% else %}
+                        <li class="none">...</li>
+                    {% endif %}
+                {% endfor %}
+                {% if all_my_musics.has_next %}
+                    <li class="long"><a href="?{{ all_my_musics.next_page_number.querystring }}">下一页</a></li>
+                {% endif %}
+
+            </ul>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block custom_js %}
+    <script type="text/javascript" src="{% static 'js/blockchainjs/web3.mini.js' %}"></script>
+    <script type="text/javascript" src='{% static 'js/blockchainjs/abi_addr.js' %}'></script>
+    <script type="text/javascript">
+        function httpPost(URL, PARAMS, method) {
+            var temp = document.createElement("form");
+            temp.action = URL;
+            temp.method = method;
+            temp.style.display = "none";
+
+            for (var x in PARAMS) {
+                var opt = document.createElement("textarea");
+                opt.name = x;
+                opt.value = PARAMS[x];
+                temp.appendChild(opt);
+            }
+
+            document.body.appendChild(temp);
+            temp.submit();
+
+            return temp;
+        }
+
+        function updateperbth(id) {
+            var params = {
+                "id": id,
+                'csrfmiddlewaretoken': '{{ csrf_token }}',
+            };
+            httpPost('/users/updatemusic/', params, 'post');
+        }
+
+
+        function musicdetailbtn(pur_id) {
+            var params = {
+                "id": pur_id,
+            };
+            httpPost('/users/purdetialdown/', params, 'get');
+        }
+
+        function refundMoney(music_bcid) {
+            if (ethereum.selectedAddress == undefined) {
+                alert('请登录METAMASK！');
+
+                async function testAsync() {
+                    const accounts = await ethereum.enable();
+                    return accounts;
+                }
+
+                const account = testAsync();
+                return;
+            }
+            if (ethereum.networkVersion != 428) {
+                alert('请切换网到http://428');
+                return;
+            }
+            if (ethereum.selectedAddress != '{{ request.user.address }}'.toLowerCase()) {
+                alert('付款钱包与账户钱包不一致');
+                return;
+            }
+
+            web3 = new Web3(web3.currentProvider);
+            var MyContract = new web3.eth.Contract(abi, addresss);
+            MyContract.methods.refundMoney(music_bcid).send({
+                from: ethereum.selectedAddress,
+            })
+                .on('transactionHash', function (hash) {
+
+                })
+                .on('receipt', function (receipt) {
+                    alert('退款成功，后台正在处理交易，请稍等');
+                    window.location.reload();
+                })
+                .on('confirmation', function (confirmationNumber, receipt) {
+                })
+                .on('error', function (error, receipt) {
+
+                })
+
+        }
+
+        function downloadkeybth(music_id) {
+            var formdata = new FormData();
+            formdata.append('music_id', music_id);
+            formdata.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+            $.ajax({
+                cache: false,
+                type: 'post',
+                url: "/users/downloadkey/",
+                data: formdata,
+                async: true,
+                processData: false,    // 不处理数据
+                contentType: false,    // 不设置内容类型
+                success: function (data) {
+                    console.log(data);
+                    if (data.status == 'success') {
+                        alert(data.msg);
+                        window.open('http://127.0.0.1:8080/ipfs/' + data.ipfs)
+                        window.location.reload()
+                    } else if (data.status == 'fail') {
+                        alert(data.msg);
+                        window.location.reload()
+                    }
+                }
+            });
+        }
+
+        function downloadbth(ipfshash) {
+            window.open('http://127.0.0.1:8080/ipfs/' + ipfshash)
+        }
+
+        var UTFTranslate = {
+            Change: function (pValue) {
+                return pValue.replace(/[^\u0000-\u00FF]/g, function ($0) {
+                    return escape($0).replace(/(%u)(\w{4})/gi, "\\u$2")
+                });
+            }
+        };
+
+        function purchasebth(my_music, music_bcId, permit, money) {
+            if (ethereum.selectedAddress == undefined) {
+                alert('请登录METAMASK！');
+
+                async function testAsync() {
+                    const accounts = await ethereum.enable();
+                    return accounts;
+                }
+
+                const account = testAsync();
+                return;
+            }
+            if (ethereum.networkVersion != 5777) {
+                alert('请切换网到http://5777');
+                return;
+            }
+            if (ethereum.selectedAddress != '{{ request.user.address }}'.toLowerCase()) {
+                alert('付款钱包与账户钱包不一致');
+                return;
+            }
+            if (permit != 1) {
+                var projectname = prompt('请填写授权项目名称(若不清楚请查看“价格&授权”板块)');
+                var proname = UTFTranslate.Change(projectname).toLowerCase();
+                if (projectname == '') {
+                    return;
+                }
+            }
+
+            web3 = new Web3(web3.currentProvider);
+            var weiPrice = web3.utils.toWei(parseFloat(money).toString(), 'ether');
+            var MyContract = new web3.eth.Contract(abi, addresss);
+
+            MyContract.methods.purchase(proname, music_bcId, permit).send({
+                from: ethereum.selectedAddress,
+                value: weiPrice,
+            })
+                .on('transactionHash', function (hash) {
+                })
+                .on('receipt', function (receipt) {
+                    alert('购买成功，后台正在处理交易，请稍等');
+                    window.location.reload();
+                })
+                .on('confirmation', function (confirmationNumber, receipt) {
+                    console.log(confirmationNumber)
+                })
+                .on('error', function (error, receipt) {
+
+                })
+
+        }
+
+        $('.jsDeleteFav_teacher').on('click', function () {
+            var _this = $(this),
+                favid = _this.attr('data-favid');
+            $.ajax({
+                cache: false,
+                type: "POST",
+                url: "",
+                data: {
+                    fav_type: 3,
+                    fav_id: favid,
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                },
+                async: true,
+                success: function (data) {
+                    Dml.fun.winReload();
+                }
+            });
+        });
+    </script>
+{% endblock %}
+
+

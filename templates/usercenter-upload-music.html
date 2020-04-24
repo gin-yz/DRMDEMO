@@ -1,0 +1,170 @@
+{% extends 'usercenter-base.html' %}
+{% load staticfiles %}
+{% block title %}个人信息- 区块链音乐版权平台{% endblock %}
+{% block custom_bread %}
+    <section>
+        <div class="wp">
+            <ul class="crumbs">
+                <li><a href="{% url 'index' %}">首页</a>></li>
+                <li><a href="{% url 'users:info' %}">个人中心</a>></li>
+                <li>音乐版权发布</li>
+            </ul>
+        </div>
+    </section>
+{% endblock %}
+
+{% block rigt_form %}
+    <script type="text/javascript" src="/static/ueditor/ueditor.config.js"></script>
+    <script type="text/javascript" src="/static/ueditor/ueditor.all.js"></script>
+
+    <div class="right">
+        <div class="personal_des">
+            <div class="head" style="border:1px solid #eaeaea;">
+                <h1>音乐版权上传</h1>
+            </div>
+            <div class="inforcon1">
+
+                <form class="perinform" id="jsMusicUploadForm" autocomplete="off">
+                    <ul class="right1">
+                        <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;歌&nbsp;&nbsp;曲&nbsp;&nbsp;名：
+                            <input type="text" name="music_name" id="music_name" placeholder="请输入歌曲名">
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;歌曲时长：
+                            <input type="text" name="music_times  " id="music_times" placeholder="单位：秒（second）">
+                        </li>
+                        <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;歌曲描述：
+                            <input type="text" id="music_desc" name="music_desc" style="width: 760px"
+                                   placeholder="歌曲简要描述">
+                        </li>
+                        <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;歌曲标签：
+                            <label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name="music_tags"
+                                                                        value="1">古典</label>
+                            <label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name="music_tags"
+                                                                              value="2">爵士</label>
+                            <label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name="music_tags"
+                                                                              value="3">摇滚</label>
+                            <label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name="music_tags"
+                                                                              value="4">放克</label>
+                            <label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name="music_tags"
+                                                                              value="5">后摇</label>
+                            <label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name="music_tags"
+                                                                              value="6">电子</label>
+                            <label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name="music_tags"
+                                                                              value="7">嘻哈</label>
+                            <label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name="music_tags"
+                                                                              value="8">乡村</label>
+                            <label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name="music_tags"
+                                                                              value="9">蓝草</label>
+                            <label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name="music_tags"
+                                                                              value="10">民谣</label>
+                            <label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name="music_tags"
+                                                                              value="11">拉丁</label>
+
+                        </li>
+                        <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name="music_tags" value="12">雷鬼</label>
+                            <label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name="music_tags"
+                                                                              value="13">氛围</label>
+                            <label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name="music_tags"
+                                                                              value="14">古风</label>
+                            <label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name="music_tags"
+                                                                              value="15">迪斯科</label>
+                            <label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name="music_tags"
+                                                                              value="16">重金属</label>
+                            <label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name="music_tags"
+                                                                              value="17">轻音乐</label>
+                            <label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name="music_tags"
+                                                                              value="18">中国风</label>
+                            <label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name="music_tags"
+                                                                              value="19">管弦乐</label>
+                            <label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name="music_tags"
+                                                                              value="20">布鲁斯</label>
+                            <label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name="music_tags"
+                                                                              value="21">巴洛克</label>
+
+                        </li>
+                        <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name="music_tags"
+                                                                              value="22">新民乐</label>
+                            <label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name="music_tags" value="23">新时代</label>
+                            <label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name="music_tags"
+                                                                              value="24">车库</label>
+                            <label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name="music_tags"
+                                                                              value="25">拉格泰姆</label>
+                            <label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name="music_tags"
+                                                                              value="26">摇摆爵士</label>
+                            <label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name="music_tags"
+                                                                              value="27">酷爵士乐</label>
+                            <label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name="music_tags"
+                                                                              value="28">比波普爵士</label>
+                            <label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name="music_tags"
+                                                                              value="29">神游舞曲</label>
+
+
+                        </li>
+                        <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name="music_tags"
+                                                                              value="30">EDM</label>
+                            <label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name="music_tags"
+                                                                              value="31">House</label>
+                            <label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name="music_tags"
+                                                                              value="32">Trap</label>
+                            <label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name="music_tags"
+                                                                              value="33">R&B</label>
+                        </li>
+                        <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;歌曲价格1：
+                            <input type="text" name="music_price1 " id="music_price1" placeholder="请输入权限1价格，单位：ETH">
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;歌曲价格2：
+                            <input type="text" name="music_price2  " id="music_price2" placeholder="请输入权限2价格，单位：ETH">
+                        </li>
+                        <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;歌曲价格3：
+                            <input type="text" name="music_price3 " id="music_price3" placeholder="请输入权限3价格，单位：ETH">
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;歌曲价格4：
+                            <input type="text" name="music_price4  " id="music_price4" placeholder="请输入权限4价格，单位：ETH">
+                        </li>
+                        <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;歌曲价格5：
+                            <input type="text" name="music_price5 " id="music_price5" placeholder="请输入权限5价格，单位：ETH">
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;歌曲价格6：
+                            <input type="text" name="music_price6  " id="music_price6" placeholder="请输入权限6价格，单位：ETH">
+                        </li>
+                        <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;歌曲封面图：
+                            <input type="file" name="image" id="image">
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;歌曲试听文件：
+                            <input type="file" name="demoLinkfile" id="demoLinkfile">
+                            <input id="demoLinkfileipfshash" hidden>
+                        </li>
+                        <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;歌曲加密文件：
+                            <input type="file" name="hashLinkfile" id="hashLinkfile">
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;歌曲加密密钥：
+                            <input type="file" name="keyfile" id="keyfile">
+                            <input id="hashLinkfileipfshash" hidden>
+                        </li>
+                        <div class="edui-one">
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span
+                                style="height: 50px;line-height: 50px;">歌曲详细描述：</span>
+                            {{ form.music_detail }}
+                        </div>
+                        <li class="button heibtn">
+                            <input type="button" id="jsMusicUploadBtn" value="发布">
+                        </li>
+                    </ul>
+                    {% csrf_token %}
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block custom_js %}
+    <script src="{% static 'js/validate.js' %}" type="text/javascript"></script>
+    <script type="text/javascript" src="{% static 'js/blockchainjs/web3.mini.js' %}"></script>
+    <script type="text/javascript" src='{% static 'js/blockchainjs/abi_addr.js' %}'></script>
+    <script type="text/javascript" src='{% static 'js/blockchainjs/uploadmusic.js' %}'></script>
+    <script>
+        async function testAsync() {
+            const accounts = await ethereum.enable();
+            return accounts;
+        }
+
+        const account = testAsync()
+        web3 = new Web3(web3.currentProvider);
+    </script>
+{% endblock %}

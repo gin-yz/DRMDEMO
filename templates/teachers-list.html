@@ -1,0 +1,203 @@
+{% extends 'teacherbase.html' %}
+{% load staticfiles %}
+{% block title %}音乐人列表页-区块链音乐版权平台{% endblock %}
+{% block custom_bread %}
+    <section>
+        <div class="wp">
+            <ul class="crumbs">
+                <li><a href="{% url 'index' %}">首页</a>></li>
+                <li>音乐人</li>
+            </ul>
+        </div>
+    </section>
+{% endblock %}
+{% block content %}
+    <section>
+        <div class="wp butler_list_box list">
+            <div class='left'>
+                <div class="butler_list layout">
+                    <div class="head">
+                        <ul class="fl tab_header">
+                            <li class="{% if sort == '' %}active{% endif %}"><a href="?sort=">全部</a></li>
+                            <li class="{% if sort == 'hot' %}active{% endif %}"><a href="?sort=hot">热度 &#8595;</a>
+                            </li>
+                            <li class="{% if sort == 'click' %}active{% endif %}"><a href="?sort=click">点击数 &#8595;</a>
+                            </li>
+                            <li class="{% if sort == 'buy' %}active{% endif %}"><a href="?sort=buy">销量 &#8595;</a></li>
+                            <li class="{% if sort == 'save' %}active{% endif %}"><a href="?sort=save">收藏 &#8595;</a>
+                            </li>
+                        </ul>
+                        <div class="fr butler-num">共<span class="key">{{ musician_nums }}</span>人&nbsp;&nbsp;&nbsp;
+                        </div>
+                    </div>
+                    {% for musician in musicians.object_list %}
+                        <dl class="des">
+                            <dt>
+                                <a href="{% url 'musician_detail' musician.id %}">
+                                    <div class="picpic">
+                                        <img width="100" height="100" class="scrollLoading"
+                                             src="{{ musician.image.url }}"/>
+                                    </div>
+                                </a>
+                                <div class="btn">
+                                    <div class="fr btn2 bdsharebuttonbox"
+                                         data-text="{{ musician.nick_name }}-区块链音乐版权平台"
+                                         data-desc="我在#区块链音乐版权平台#发现了音乐人“{{ musician.nick_name }}”，一起来看看吧。"
+                                         data-comment=
+                                                 data-url="{% url 'musician_detail' musician.id %}"
+                                         data-tag="share_1"
+                                    >
+                                        <span class="fl">分享</span>
+                                        <a href="#" class="bds_more" data-cmd="more"></a>
+                                    </div>
+                                </div>
+                            </dt>
+                            <dd>
+                                <a href="{% url 'musician_detail' musician.id %}">
+                                    <h1>{{ musician.nick_name }}<span class="key picbig">已认证</span></h1>
+                                </a>
+                                <ul class="cont">
+                                    <li>作曲数：<span>{% if musician.get_all_music_num > 0 %}
+                                        {{ musician.get_all_music_num }}
+                                        首{% else %}
+                                        无{% endif %}</span></li>
+                                    <li>代表歌曲：<span>{% if musician.get_all_music_num > 0 %}
+                                        {% for music in musician.get_represent_music %}
+                                            <a href="{% url 'music:detail' music.id %}"> {{ music.music_name }}&nbsp;&nbsp;&nbsp;</a>
+                                        {% endfor %}
+                                    {% else %}
+                                        无{% endif %}</span>
+                                    </li>
+                                    <li>歌曲销量：<span>{% if musician.get_all_sell_num > 0 %}{{ musician.get_all_sell_num }}
+                                        首{% else %}
+                                        无{% endif %}&nbsp;</span></li>
+                                    <li>粉丝数：<span>{% if musician.fav_nums > 0 %}{{ musician.fav_nums }}人{% else %}
+                                        无{% endif %}</span></li>
+                                    <li>作曲风格：<span>{{ musician.points }}</span></li>
+                                    <li>热度：<span>{{ musician.hot_num }}</span></li>
+                                </ul>
+                            </dd>
+                            <a class="buy buyservice" href="{% url 'musician_detail' musician.id %}"><br/>查看<br/>详情</a>
+                        </dl>
+                    {% endfor %}
+                </div>
+                <div class="pageturn">
+                    <ul class="pagelist">
+                        {% if musicians.has_previous %}
+                            <li class="long"><a href="?{{ musicians.previous_page_number.querystring }}">上一页</a></li>
+                        {% endif %}
+
+                        {% for page in musicians.pages %}
+                            {% if page %}
+                                {% ifequal page musicians.number %}
+                                    <li class="active"><a href="?{{ page.querystring }}">{{ page }}</a></li>
+                                {% else %}
+                                    <li><a href="?{{ page.querystring }}" class="page">{{ page }}</a></li>
+                                {% endifequal %}
+                            {% else %}
+                                <li class="none">...</li>
+                            {% endif %}
+                        {% endfor %}
+                        {% if musicians.has_next %}
+                            <li class="long"><a href="?{{ musicians.next_page_number.querystring }}">下一页</a></li>
+                        {% endif %}
+                        {#                <li class="active"><a href="?page=1">1</a></li>#}
+                        {#                <li><a href="?page=2" class="page">2</a></li>#}
+                        {#                <li><a href="?page=3" class="page">3</a></li>#}
+                        {#                <li class="long"><a href="?page=2">下一页</a></li>#}
+                    </ul>
+                </div>
+            </div>
+            <div class="right layout">
+                <div class="head">热门音乐人</div>
+                {% for musician in hot_musicians %}
+                    <dl class="des">
+                        <span class="num fl">{{ forloop.counter }}</span>
+                        <a href="{% url 'musician_detail' musician.id %}">
+                            <dt>
+                                <img width="50" height="50" class="scrollLoading" src="{{ musician.image.url }}"/>
+                            </dt>
+                        </a>
+                        <dd>
+                            <a href="{% url 'musician_detail' musician.id %}">
+                                <h1 title="{{ musician.nick_name }}" style="overflow: hidden;width: 80px;height: 19px">{{ musician.nick_name }}</h1>
+                            </a>
+                            <p>销量： <span>{% if musician.get_all_sell_num > 0 %}{{ musician.get_all_sell_num }}
+                            {% else %}
+                                无{% endif %}</span></p>
+                            <p>粉丝数：<span>{% if musician.fav_nums > 0 %}{{ musician.fav_nums }}人{% else %}
+                                无{% endif %}</span></p>
+                        </dd>
+                    </dl>
+                {% endfor %}
+
+            </div>
+        </div>
+    </section>
+{% endblock %}
+
+{% block custom_js %}
+    <script>
+        var shareUrl = '',
+            shareText = '',
+            shareDesc = '',
+            shareComment = '';
+        $(function () {
+            $(".bdsharebuttonbox a").mouseover(function () {
+                var type = $(this).attr('data-cmd'),
+                    $parent = $(this).parent('.bdsharebuttonbox'),
+                    fxurl = $parent.attr('data-url'),
+                    fxtext = $parent.attr('data-text'),
+                    fxdesc = $parent.attr('data-desc'),
+                    fxcomment = $parent.attr('data-comment');
+                switch (type) {
+                    case 'tsina':
+                    case 'tqq':
+                    case 'renren':
+                        shareUrl = fxurl;
+                        shareText = fxdesc;
+                        shareDesc = '';
+                        shareComment = '';
+                        break;
+                    default :
+                        shareUrl = fxurl;
+                        shareText = fxtext;
+                        shareDesc = fxdesc;
+                        shareComment = fxcomment;
+                        break;
+                }
+            });
+        });
+
+        function SetShareUrl(cmd, config) {
+            if (shareUrl) {
+                config.bdUrl = "{{ SITE_URL }}" + shareUrl;
+            }
+            if (shareText) {
+                config.bdText = shareText;
+            }
+            if (shareDesc) {
+                config.bdDesc = shareDesc;
+            }
+            if (shareComment) {
+                config.bdComment = shareComment;
+            }
+
+            return config;
+        }
+
+        window._bd_share_config = {
+            "common": {
+                "onBeforeClick": SetShareUrl,
+                "bdMini": "2",
+                "searchPic": "1",
+                "bdMiniList": false
+            },
+            "share": {
+                "bdSize": "16"
+            }
+        };
+        with (document) 0[(getElementsByTagName('head')[0] || body).appendChild(createElement('script')).src = 'http://bdimg.share.baidu.com/static/api/js/share.js?cdnversion=' + ~(-new Date() / 36e5)];
+    </script>
+{% endblock %}
+<!DOCTYPE html>

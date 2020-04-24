@@ -1,0 +1,121 @@
+{% extends 'usercenter-base.html' %}
+{% block title %}我的收藏- 区块链音乐版权平台{% endblock %}
+{% load staticfiles %}
+{% block custom_bread %}
+    <section>
+        <div class="wp">
+            <ul class="crumbs">
+                <li><a href="{% url 'index' %}">首页</a>></li>
+                <li><a href="{% url 'users:info' %}">个人中心</a>></li>
+                <li>我的收藏</li>
+            </ul>
+        </div>
+    </section>
+{% endblock %}
+
+{% block rigt_form %}
+    <div class="right">
+        <div class="personal_des Releasecont">
+            <div class="head">
+                <h1>我的收藏</h1>
+            </div>
+        </div>
+        <div class="personal_des permessage">
+            <div class="head">
+                <ul class="tab_header messagehead">
+                    <li><a href="{% url 'users:myfav' %}">音乐</a></li>
+                    <li class="active"><a href="{% url 'users:myfav_musician' %}">音乐人</a></li>
+                </ul>
+            </div>
+            <div class="messagelist">
+                {% for musician in musician_list.object_list %}
+                    <div class="butler_list butler-fav-box1">
+                        <dl class="des users">
+                            <dt>
+                                <a href="{% url 'musician_detail' musician.id %}">
+                                    <div class="picpic">
+                                        <img width="100" height="100" class="scrollLoading"
+                                             src="{{ musician.image.url }}"/>
+                                    </div>
+                                </a>
+                            </dt>
+                            <dd>
+                                <a href="{% url 'musician_detail' musician.id %}">
+                                    <div class="demoone1">{{ musician.nick_name }}</div>
+                                </a>
+                                <ul class="cont">
+                                    <li>作曲数：<span>{% if musician.get_all_music_num > 0 %}
+                                        {{ musician.get_all_music_num }}
+                                        首{% else %}
+                                        无{% endif %}</span></li>
+                                    <li>代表歌曲：<span>{% if musician.get_all_music_num > 0 %}
+                                        {% for music in musician.get_represent_music %}
+                                            <a href="{% url 'music:detail' music.id %}"> {{ music.music_name }}&nbsp;&nbsp;&nbsp;</a>
+                                        {% endfor %}
+                                    {% else %}
+                                        无{% endif %}</span>
+                                    </li>
+                                    <li>歌曲销量：<span>{% if musician.get_all_sell_num > 0 %}{{ musician.get_all_sell_num }}
+                                        首{% else %}
+                                        无{% endif %}&nbsp;</span></li>
+                                    <li>粉丝数：<span>{% if musician.fav_nums > 0 %}{{ musician.fav_nums }}人{% else %}
+                                        无{% endif %}</span></li>
+                                    <li>作曲风格：<span>{{ musician.points }}</span></li>
+                                    <li>热度：<span>{{ musician.hot_num }}</span></li>
+                                </ul>
+                                <div class="delete jsDeleteFav_teacher" data-favid="{{ musician.id }}"></div>
+                            </dd>
+                        </dl>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="pageturn">
+                <ul class="pagelist">
+                    {% if musician_list.has_previous %}
+                        <li class="long"><a href="?{{ musician_list.previous_page_number.querystring }}">上一页</a></li>
+                    {% endif %}
+
+                    {% for page in musician_list.pages %}
+                        {% if page %}
+                            {% ifequal page musician_list.number %}
+                                <li class="active"><a href="?{{ page.querystring }}">{{ page }}</a></li>
+                            {% else %}
+                                <li><a href="?{{ page.querystring }}" class="page">{{ page }}</a></li>
+                            {% endifequal %}
+                        {% else %}
+                            <li class="none">...</li>
+                        {% endif %}
+                    {% endfor %}
+                    {% if musician_list.has_next %}
+                        <li class="long"><a href="?{{ musician_list.next_page_number.querystring }}">下一页</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block custom_js %}
+    <script type="text/javascript">
+        $('.jsDeleteFav_teacher').on('click', function () {
+            var _this = $(this),
+                favid = _this.attr('data-favid');
+            $.ajax({
+                cache: false,
+                type: "POST",
+                url: "{% url 'op:fav' %}",
+                data: {
+                    fav_type: 2,
+                    fav_id: favid,
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                },
+                async: true,
+                success: function (data) {
+                    Dml.fun.winReload();
+                }
+            });
+        });
+    </script>
+{% endblock %}
+
+
