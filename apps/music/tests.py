@@ -9,18 +9,18 @@ from web3 import Web3
 # print(w3.eth.getBlock(26)['timestamp'])
 
 
-def loadcontact(w3, contract):
-    fn_abi = 'F:\\onedrive\\blockchain\\code\\final\\demo\\{0}.abi'.format(contract)
-    fn_addr = 'F:\\onedrive\\blockchain\\code\\final\\demo\\{0}.addr'.format(contract)
-
-    with open(fn_abi) as f:
-        abi = json.load(f)
-
-    with open(fn_addr) as f:
-        addr = f.read()
-        addr = Web3.toChecksumAddress(addr.lower())
-
-    return w3.eth.contract(address=addr, abi=abi)
+# def loadcontact(w3, contract):
+#     fn_abi = 'F:\\onedrive\\blockchain\\code\\final\\demo\\{0}.abi'.format(contract)
+#     fn_addr = 'F:\\onedrive\\blockchain\\code\\final\\demo\\{0}.addr'.format(contract)
+#
+#     with open(fn_abi) as f:
+#         abi = json.load(f)
+#
+#     with open(fn_addr) as f:
+#         addr = f.read()
+#         addr = Web3.toChecksumAddress(addr.lower())
+#
+#     return w3.eth.contract(address=addr, abi=abi)
 
 
 # action = loadcontact(w3, 'cys')
@@ -35,8 +35,8 @@ def loadcontact(w3, contract):
 #         if msg == 502:
 #             break
 
-w3 = Web3(Web3.HTTPProvider('http://localhost:7545'))
-action = loadcontact(w3, 'cys')
+# w3 = Web3(Web3.HTTPProvider('http://localhost:7545'))
+# action = loadcontact(w3, 'cys')
 # print(int(Web3.fromWei(100000000000000000000, 'ether')))
 
 # result = action.functions.isProducer('0x7e36b9fc43648c2a1d12a307D759a2F063bcc08f').call()
