@@ -44,6 +44,9 @@
                                         class="pram word3">时&nbsp;&nbsp;长(秒)：</span><span>{{ music.music_times }}</span>
                                 </li>
                                 <li><span
+                                        class="pram word3">BPM(n/m)：</span><span>{{ music.music_bpm }}</span>
+                                </li>
+                                <li><span
                                         class="pram word3">权限说明：</span><span id="pricefont">仅供个人欣赏</span></li>
                                 <li><span
                                         class="pram word3">流&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;派：</span><span>{% for tag in music.music_tag %}
@@ -387,7 +390,7 @@
             formdata.append('price', price);
             formdata.append('csrfmiddlewaretoken', '{{ csrf_token }}');
             formdata.append('address', address);
-            formdata.append('projectname',projectname);
+            formdata.append('projectname', projectname);
             $.ajax({
                 cache: false,
                 type: 'post',
@@ -405,7 +408,7 @@
                         var hashLinkfileHash = data.hashLinkfileHash
                         web3 = new Web3(web3.currentProvider);
                         var MyContract = new web3.eth.Contract(abi, addresss);
-                        MyContract.methods.purchase(data.project_name_utf8,data.music_bcId, data.purchase_permission).send({
+                        MyContract.methods.purchase(data.project_name_utf8, data.music_bcId, data.purchase_permission).send({
                             from: ethereum.selectedAddress,
                             value: data.money
                         })

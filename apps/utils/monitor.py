@@ -46,15 +46,19 @@ while True:
                                        event.args._timestamp, event.args._money, event.transactionHash.hex(),event.args._projectname)
         for event in sendMsgFilter.get_new_entries():
             if event.args._type == 1:
-                tasks.modifyUpTask.delay(event.args._msg)
+                tasks.modifyUpDrmerTask.delay(event.args._msg)
             if event.args._type == 2:
-                tasks.modifyDownTask.delay(event.args._msg)
+                tasks.modifyDownDrmerTask.delay(event.args._msg)
             if event.args._type == 3:
                 tasks.refundTask.delay(event.args._from, event.args._msg)
             if event.args._type == 4:
                 tasks.becomeproTask.delay(event.args._from)
             if event.args._type == 5:
                 tasks.exitproTask.delay(event.args._from)
+            if event.args._type == 7:
+                tasks.modifyUpAdminTask.delay(event.args._msg)
+            if event.args._type == 8:
+                tasks.modifyDownAdminTask.delay(event.args._msg)
         for event in sendAddMsgFilter.get_new_entries():
             tasks.addTask.apply_async(args=(event.args._from, event.args._name, event.args._id, event.args._hashLink, event.args._price,
                                 event.transactionHash.hex(), event.args._desc, event.args._status, event.args._demoLink))

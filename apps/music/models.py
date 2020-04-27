@@ -43,6 +43,7 @@ class Music(BaseModel):
     music_name = models.CharField(verbose_name="歌曲名", max_length=50, blank=False)
     music_desc = models.CharField(verbose_name="歌曲描述", max_length=300)
     music_times = models.IntegerField(default=0, verbose_name="歌曲时长(秒)")
+    music_bpm = models.IntegerField(default=0, verbose_name="BPM")
     music_bcId = models.CharField(verbose_name="歌曲上链id", max_length=32)
     music_status = models.IntegerField(verbose_name="歌曲状态", default=0)
     music_price1 = models.CharField(verbose_name="个人价格", max_length=128, default='')

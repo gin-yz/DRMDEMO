@@ -111,6 +111,13 @@
                             <label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name="music_tags"
                                                                               value="33">R&B</label>
                         </li>
+                        <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;歌曲 BPM：
+                            <input type="text" name="music_bpm " id="music_bpm" placeholder="单位：(n/m) Beat Per Minute">
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;是否开售：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <input type="radio" name="music_issell" id ='music_issell' value=true checked>是
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <input type="radio" name="music_issell" id ='music_issell' value=false>否
+                        </li>
                         <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;歌曲价格1：
                             <input type="text" name="music_price1 " id="music_price1" placeholder="请输入权限1价格，单位：ETH">
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;歌曲价格2：
@@ -127,7 +134,7 @@
                             <input type="text" name="music_price6  " id="music_price6" placeholder="请输入权限6价格，单位：ETH">
                         </li>
                         <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;歌曲封面图：
-                            <input type="file" name="image" id="image">
+                            <input type="file" name="music_image" id="music_image">
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;歌曲试听文件：
                             <input type="file" name="demoLinkfile" id="demoLinkfile">
                             <input id="demoLinkfileipfshash" hidden>

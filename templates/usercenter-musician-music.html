@@ -72,23 +72,30 @@
                                 </dd>
                                 <div class="rightdemo">
                                     <button class="btndemo" onclick="musicdetailbtn({{ my_music.id }})">版权上链信息</button>
-                                    <button class="btndemo" onclick="musicsolddetailbtn({{ my_music.music_bcId }})">
-                                        版权售出详情
-                                    </button>
                                     {% ifequal my_music.music_status 1 %}
+                                        <button class="btndemo" onclick="musicsolddetailbtn({{ my_music.music_bcId }})">
+                                            版权售出详情
+                                        </button>
                                         <button class="btndemo" onclick="musicmoditybtn({{ my_music.music_bcId }},0)">
                                             下架版权
                                         </button>
-                                    {% else %}
+                                        <button class="btndemo"
+                                                onclick="modifyMyMusicbth({{ my_music.music_bcId }})">
+                                            版权详情修改
+                                        </button>
+                                    {% endifequal %}
+                                    {% ifequal my_music.music_status 0 %}
+                                        <button class="btndemo" onclick="musicsolddetailbtn({{ my_music.music_bcId }})">
+                                            版权售出详情
+                                        </button>
                                         <button class="btndemo" onclick="musicmoditybtn({{ my_music.music_bcId }},1)">
                                             上架版权
                                         </button>
+                                        <button class="btndemo"
+                                                onclick="modifyMyMusicbth({{ my_music.music_bcId }})">
+                                            版权详情修改
+                                        </button>
                                     {% endifequal %}
-
-                                    <button class="btndemo"
-                                            onclick="modifyMyMusicbth({{ my_music.music_bcId }})">
-                                        版权详情修改
-                                    </button>
 
 
                                 </div>
@@ -170,7 +177,7 @@
                     console.log(data);
                     if (data.status == 'success') {
                         alert("您的请求已受理，系统查询后发至您的邮箱，请注意查收！")
-                    }else if (data.status == 'fail') {
+                    } else if (data.status == 'fail') {
                         alert(data.msg);
                     }
                 }
@@ -206,10 +213,12 @@
         function downloadbth(ipfshash) {
             window.open('http://127.0.0.1:8080/ipfs/' + ipfshash)
         }
+
         function modifyMyMusicbth(id) {
-            var url = '{% url 'music:modifymymuiscinfo'%}'+'?id='+id;
-            window.open(url,'','width=1155px,height=700px,top=50,left=300,resizable=no,location=no,menubar=no,status=no')
+            var url = '{% url 'music:modifymymuiscinfo'%}' + '?id=' + id;
+            window.open(url, '', 'width=1155px,height=700px,top=50,left=300,resizable=no,location=no,menubar=no,status=no')
         }
+
         function musicmoditybtn(music_bcId, permit) {
             if (ethereum.selectedAddress == undefined) {
                 alert('请登录METAMASK！');
@@ -233,12 +242,15 @@
 
             web3 = new Web3(web3.currentProvider);
             var MyContract = new web3.eth.Contract(abi, addresss);
-            MyContract.methods.modifyProductToStorage(music_bcId, permit).send({
+            MyContract.methods.modifyProductDrmer(music_bcId, permit).send({
                 from: ethereum.selectedAddress,
+                value: 10000000000000000,
             })
                 .on('transactionHash', function (hash) {
                     alert('修改成功,请等待后台处理，若有疑问，请联系管理员')
-                    window.location.reload()
+                    setTimeout(function () {
+                        window.location.reload()
+                    }, 500)
                 })
                 .on('receipt', function (receipt) {
 

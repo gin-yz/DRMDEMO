@@ -19,6 +19,10 @@ const abi =[
 				"type": "string"
 			},
 			{
+				"name": "_status",
+				"type": "bool"
+			},
+			{
 				"name": "_price",
 				"type": "uint256[]"
 			}
@@ -59,10 +63,28 @@ const abi =[
 				"type": "bool"
 			}
 		],
-		"name": "modifyProductToStorage",
+		"name": "modifyProductAdmin",
 		"outputs": [],
 		"payable": false,
 		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_productId",
+				"type": "uint256"
+			},
+			{
+				"name": "_status",
+				"type": "bool"
+			}
+		],
+		"name": "modifyProductDrmer",
+		"outputs": [],
+		"payable": true,
+		"stateMutability": "payable",
 		"type": "function"
 	},
 	{
@@ -621,4 +643,4 @@ const abi =[
 		"type": "function"
 	}
 ]
-const addresss = '0xde176420c629d334f982e904c84fe2ad9ea64660'
+const addresss = '0x6205b5f841e5ab8efdc9cfba364c75ff3ffff2e9'

@@ -127,6 +127,7 @@ class UploadOneView(LoginRequiredMixin, View):
             musicone.music_price4 = music_price4
             musicone.music_price5 = music_price5
             musicone.music_price6 = music_price6
+            musicone.music_bpm = uploadone_form.cleaned_data['music_bpm']
             musicone.image = uploadone_form.cleaned_data['image']
             musicone.music_hashLink = hashLinkfileHash['Hash']
             musicone.music_demoLink = demoLinkfileHash['Hash']
@@ -330,6 +331,7 @@ class UpdateMyPermissionOneView(LoginRequiredMixin, View):
                 "old_music": old_music,
                 'is_comment': is_comment,
                 'comments': comments,
+                "s_type": "music",
             })
 
 

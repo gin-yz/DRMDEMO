@@ -24,6 +24,8 @@ from apps.utils.ssl_client import client_ssl
 
 client = client_ssl()
 ipfsclient = ipfshttpclient.connect('/ip4/127.0.0.1/tcp/5001/http')
+
+
 def loadcontact(w3, contract):
     fn_abi = 'F:\\onedrive\\blockchain\\code\\final\\demo\\{0}.abi'.format(contract)
     fn_addr = 'F:\\onedrive\\blockchain\\code\\final\\demo\\{0}.addr'.format(contract)
@@ -80,10 +82,12 @@ def addTask(_from, _name, _id, _hashLink, _price, transactionHash, _desc, _statu
         # 传送密钥服务器
         keyfile = music.keyfile.read()
         send_data = {
-            'type':1,
+            'type': 1,
             'productId': int(_id),
-            'keyfile':b2a_hex(keyfile).decode()
+            "status": _status,
+            'keyfile': keyfile.decode()
         }
+        # print(send_data)
         recvmsg = client.send_msg(send_data)
         if recvmsg == 'ok':
             return 'success'
@@ -92,47 +96,112 @@ def addTask(_from, _name, _id, _hashLink, _price, transactionHash, _desc, _statu
 
 
 @shared_task
-def modifyUpTask(id):
+def modifyUpDrmerTask(id):
     music = Music.objects.filter(music_bcId=int(id))
     if music:
         music = music.first()
         if music.music_status:
-            music.music_status = 1
+            music.music_status = 2
             music.save()
-            return 'fail'
-        music.music_status = 1
+            return 'modify music status fail'
+        music.music_status = 2
         music.save()
+        send_data = {
+            'type': 3,
+            'productId': int(id),
+            "status": True,
+        }
+        # print(send_data)
+        recvmsg = client.send_msg(send_data)
+        if recvmsg == 'ok':
+            return 'modify music status success'
+        else:
+            return 'modify music status fail'
 
     else:
         withoutmusic = WithoutMusic.objects.filter(music_bcId=int(id)).first()
         if withoutmusic.music_status:
             withoutmusic.music_status = 1
             withoutmusic.save()
-            return 'fail'
+            return 'modify music status fail'
         withoutmusic.music_status = 1
         withoutmusic.save()
 
 
 @shared_task
-def modifyDownTask(id):
+def modifyDownDrmerTask(id):
     music = Music.objects.filter(music_bcId=int(id))
     if music:
         music = music.first()
-        if  music.music_status ==0:
-            music.music_status = 0
+        if music.music_status == 0:
+            music.music_status = 2
             music.save()
             return 'fail'
-        music.music_status = 0
+        music.music_status = 2
         music.save()
+        send_data = {
+            'type': 3,
+            'productId': int(id),
+            "status": False,
+        }
+        # print(send_data)
+        recvmsg = client.send_msg(send_data)
+        if recvmsg == 'ok':
+            return 'modify music status success'
+        else:
+            return 'modify music status fail'
     else:
         withoutmusic = WithoutMusic.objects.filter(music_bcId=int(id)).first()
-        if withoutmusic.music_status ==0:
+        if withoutmusic.music_status == 0:
             withoutmusic.music_status = 0
             withoutmusic.save()
             return 'fail'
         withoutmusic.music_status = 0
         withoutmusic.save()
 
+@shared_task
+def modifyUpAdminTask(id):
+    music = Music.objects.filter(music_bcId=int(id))
+    if music:
+        music = music.first()
+        if music.music_status:
+            music.music_status = 1
+            music.save()
+            return 'admin modify music status fail'
+        music.music_status = 1
+        music.save()
+        return "admin modify music status success"
+
+    else:
+        withoutmusic = WithoutMusic.objects.filter(music_bcId=int(id)).first()
+        if withoutmusic.music_status:
+            withoutmusic.music_status = 1
+            withoutmusic.save()
+            return 'modify music status fail'
+        withoutmusic.music_status = 1
+        withoutmusic.save()
+
+
+@shared_task
+def modifyDownAdminTask(id):
+    music = Music.objects.filter(music_bcId=int(id))
+    if music:
+        music = music.first()
+        if music.music_status == 0:
+            music.music_status = 0
+            music.save()
+            return 'admin modify music status fail'
+        music.music_status = 0
+        music.save()
+        return "admin modify music status success"
+    else:
+        withoutmusic = WithoutMusic.objects.filter(music_bcId=int(id)).first()
+        if withoutmusic.music_status == 0:
+            withoutmusic.music_status = 0
+            withoutmusic.save()
+            return 'fail'
+        withoutmusic.music_status = 0
+        withoutmusic.save()
 
 @shared_task
 def purchaseTask(_form, _id, _productId, _permission, _timestamp, _money, transactionHash, projectname):
@@ -165,7 +234,7 @@ def purchaseTask(_form, _id, _productId, _permission, _timestamp, _money, transa
 
 
 @shared_task
-def updateTask(_form, _id, _purchaseId, _newPermission, _timestamp, _money, transactionHash,projectname):
+def updateTask(_form, _id, _purchaseId, _newPermission, _timestamp, _money, transactionHash, projectname):
     owner = UserProfile.objects.filter(address=_form)
     old_music = UserMusic.objects.filter(purchase_bcId=str(_purchaseId))
     if not owner:
@@ -312,6 +381,7 @@ def flushTask():
                 purchase.key_ipfshash = "padding"
                 purchase.save()
 
+
 @shared_task
 def checkVaildTask():
     all_purchase = UserMusic.objects.all()
@@ -321,13 +391,13 @@ def checkVaildTask():
 
 
 @shared_task(base=QueueOnce, once={'graceful': True, 'timeout': 60 * 10})
-def uploadKeyFile(address, publickey, purchase_bcId,music_bcId):
+def uploadKeyFile(address, publickey, purchase_bcId, music_bcId):
     request_data = {
-        'type':2,
+        'type': 2,
         'address': address,
         'public': publickey,
         'purchase_bcId': purchase_bcId,
-        'productId':music_bcId,
+        'productId': music_bcId,
     }
     recvmsg = client.send_msg(request_data)
     if recvmsg == 'ok':
@@ -348,9 +418,11 @@ def uploadKeyFile(address, publickey, purchase_bcId,music_bcId):
 def productSoldDetail(productId, address):
     temp = TemporaryFile('w+t', encoding='utf-8')
     temp.write('PurchaseID-CopyrightID-Permission-Timestmap-Price(Wei)-Buyer-address-Update' + '\n')
-    all_sell = action.functions.getPurchaseIdByProduceId(int(productId)).call({'from': keyring.get_password('DRMDEMO', 'address')})
+    all_sell = action.functions.getPurchaseIdByProduceId(int(productId)).call(
+        {'from': keyring.get_password('DRMDEMO', 'address')})
     for sell in all_sell[1:]:
-        information = action.functions.getPurchaseStorageById(sell).call({'from': keyring.get_password('DRMDEMO', 'address')})
+        information = action.functions.getPurchaseStorageById(sell).call(
+            {'from': keyring.get_password('DRMDEMO', 'address')})
         temp.write(str(sell) + '----')
         temp.write('----'.join('%s' % id for id in information) + '\n')
 
@@ -397,7 +469,7 @@ def receiveKeyTask(purchase_bcId, ipfshash):
 
 
 @shared_task
-def sendKey(id,ipfshash,address):
+def sendKey(id, ipfshash, address):
     temp = TemporaryFile('w+b')
     bytes_key = ipfsclient.cat(str(ipfshash))
     temp.write(bytes_key)
@@ -406,7 +478,7 @@ def sendKey(id,ipfshash,address):
 
     temp.seek(0)
     zipApart = MIMEApplication(temp.read())
-    zipApart.add_header('Content-Disposition', 'attachment', filename='%s_%s.key' % (id,ipfshash))
+    zipApart.add_header('Content-Disposition', 'attachment', filename='%s_%s.key' % (id, ipfshash))
 
     m = MIMEMultipart()
     m.attach(textApart)

@@ -92,7 +92,7 @@
                         <ul>
                             <li class="{% if request.path == '/' %}active{% endif %}"><a href="{% url 'index' %}">首页</a>
                             </li>
-                            <li class="{% if request.path|slice:'7' == '/music/' %}active{% endif %}">
+                            <li class="{% if request.path|slice:'20' == '/users/updatemusic/' %}active{% endif %}{% if request.path|slice:'7' == '/music/' %}active{% endif %}">
                                 <a href="{% url 'music:musiclist' %}">
                                     原创音乐
                                 </a>

@@ -3,16 +3,18 @@ document.getElementById("jsMusicUploadBtn").addEventListener("click", function (
         [
             {id: '#music_name', tips: Dml.Msg.eperror, require: true},
             {id: '#music_times', tips: Dml.Msg.eperror, require: true},
+            {id: '#music_price1', tips: Dml.Msg.eperror, require: true},
             {id: '#music_price2', tips: Dml.Msg.eperror, require: true},
             {id: '#music_price3', tips: Dml.Msg.eperror, require: true},
             {id: '#music_price4', tips: Dml.Msg.eperror, require: true},
             {id: '#music_price5', tips: Dml.Msg.eperror, require: true},
             {id: '#music_price6', tips: Dml.Msg.eperror, require: true},
-            {id: '#image', tips: Dml.Msg.eperror, require: true},
+            {id: '#music_image', tips: Dml.Msg.eperror, require: true},
             {id: '#demoLinkfile', tips: Dml.Msg.eperror, require: true},
             {id: '#hashLinkfile', tips: Dml.Msg.eperror, require: true},
             {id: '#keyfile', tips: Dml.Msg.eperror, require: true},
             {id: '#music_desc', tips: Dml.Msg.eperror, require: true},
+            {id: '#music_bpm', tips: Dml.Msg.eperror, require: true},
         ]
     );
     if (!verify) {
@@ -47,7 +49,7 @@ document.getElementById("jsMusicUploadBtn").addEventListener("click", function (
     }
     var demoLinkfile = $("#demoLinkfile")[0].files[0];
     var hashLinkfile = $("#hashLinkfile")[0].files[0];
-    var image = $("#image")[0].files[0];
+    var image = $("#music_image")[0].files[0];
     var keyfile = $("#keyfile")[0].files[0];
     var music_name = $("#music_name").val();
     var music_times = $("#music_times").val();
@@ -60,10 +62,12 @@ document.getElementById("jsMusicUploadBtn").addEventListener("click", function (
     var music_price6 = $("#music_price6").val();
     var address = ethereum.selectedAddress;
     var music_detail = id_music_detail.getContent();
-    // console.log(image)
-    // console.log(music_name)
+    var music_bpm = $("#music_bpm").val();
+    var music_issell = $("#music_issell").val();
+    // console.log(music_bpm)
+    // console.log(music_issell);
 
-    console.log(checkID);
+    // console.log(checkID);
     var formdata = new FormData();
     formdata.append('demoLinkfile', demoLinkfile);
     formdata.append('hashLinkfile', hashLinkfile);
@@ -81,6 +85,7 @@ document.getElementById("jsMusicUploadBtn").addEventListener("click", function (
     formdata.append('music_times', music_times);
     formdata.append('address', address);
     formdata.append('music_detail', music_detail);
+    formdata.append("music_bpm", music_bpm);
     formdata.append('csrfmiddlewaretoken', $('input[name="csrfmiddlewaretoken"]').val(),);
     // console.log(music_price1)
     //   console.log(music_price2)
@@ -97,15 +102,17 @@ document.getElementById("jsMusicUploadBtn").addEventListener("click", function (
         processData: false,    // 不处理数据
         contentType: false,    // 不设置内容类型
         success: function (data) {
-            console.log(data)
+            console.log(data);
             if (data.errormsg) {
-                alert(data.errormsg)
+                alert(data.errormsg);
                 return;
             } else if (data.music_detail || data.image || data.music_name || data.music_desc || data.music_times || data.music_price1 || data.music_price2 || data.music_price3 || data.music_price4 || data.music_price5 || data.music_price6 || data.demoLinkfile || data.hashLinkfile || data.keyfile) {
                 if (data.music_desc) $("#music_desc")[0].style.border = '2px solid red';
                 if (data.demoLinkfile) $("#demoLinkfile")[0].style.border = '2px solid red';
-                if (data.image) $("#image")[0].style.border = '2px solid red';
+                if (data.image) $("#music_image")[0].style.border = '2px solid red';
                 if (data.music_name) $("#music_name")[0].style.border = '2px solid red';
+                if (data.music_bpm) $("#music_bpm")[0].style.border = '2px solid red';
+                if (data.music_bpm) $("#music_bpm")[0].style.border = '2px solid red';
                 if (data.music_times) $("#music_times")[0].style.border = '2px solid red';
                 if (data.music_price1) $("#music_price1")[0].style.border = '2px solid red';
                 if (data.music_price2) $("#music_price2")[0].style.border = '2px solid red';
@@ -125,7 +132,7 @@ document.getElementById("jsMusicUploadBtn").addEventListener("click", function (
                 //                 // console.log(data.price_list)
                 web3 = new Web3(web3.currentProvider);
                 var MyContract = new web3.eth.Contract(abi, addresss);
-                MyContract.methods.addProductToStorage(data.music_name_utf8, data.hashLinkfileHash, data.demoLinkfileHash, data.music_desc_utf8, data.price_list).send({from: ethereum.selectedAddress})
+                MyContract.methods.addProductToStorage(data.music_name_utf8, data.hashLinkfileHash, data.demoLinkfileHash, data.music_desc_utf8, music_issell, data.price_list).send({from: ethereum.selectedAddress})
                     .on('transactionHash', function (hash) {
                     })
                     .on('receipt', function (receipt) {
@@ -133,7 +140,7 @@ document.getElementById("jsMusicUploadBtn").addEventListener("click", function (
                         alert('上链成功，系统正在确认，请稍等');
                         setTimeout(function () {
                             window.location.href = '/users/musicianmusic/'
-                        }, 1500)
+                        }, 500)
 
                         // var formdata1 = new FormData();
                         // formdata1.append('transactionHash', receipt.transactionHash);

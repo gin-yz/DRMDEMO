@@ -17,6 +17,7 @@ class UploadOneForm(forms.ModelForm):
     hashLinkfile = fields.FileField()
     music_tags = forms.CharField(required=True)
     address = forms.CharField(required=True, max_length=42, min_length=42)
+    image = forms.ImageField(required=True)
     music_price1 = forms.DecimalField(required=True)
     music_price2 = forms.DecimalField(required=True, max_digits=256, decimal_places=5)
     music_price3 = forms.DecimalField(required=True, max_digits=256, decimal_places=5)
@@ -24,10 +25,11 @@ class UploadOneForm(forms.ModelForm):
     music_price5 = forms.DecimalField(required=True, max_digits=256, decimal_places=5)
     music_price6 = forms.DecimalField(required=True, max_digits=256, decimal_places=5)
 
+
     # 上传阶段一
     class Meta:
         model = Music
-        fields = ['music_desc', 'image', 'music_name', 'music_desc', 'music_times', 'music_detail', 'keyfile']
+        fields = ['music_desc', 'music_name', 'music_desc', 'music_times', 'music_detail', 'keyfile',"music_bpm"]
 
 
 class UploadTwoForm(forms.Form):
