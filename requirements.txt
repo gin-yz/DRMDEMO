@@ -12,7 +12,7 @@ chardet==3.0.4
 cytoolz==0.10.1
 defusedxml==0.6.0
 diff-match-patch==20181111
-Django==2.2.7
+Django==2.2.13
 django-celery-beat==2.0.0
 django-celery-results==1.2.1
 django-crispy-forms==1.9.0
