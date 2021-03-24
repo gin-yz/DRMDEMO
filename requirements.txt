@@ -67,7 +67,7 @@ PyYAML==5.3
 redis==3.4.1
 requests==2.23.0
 rlp==1.2.0
-rsa==4.0
+rsa==4.1
 simplepro==1.3
 six==1.14.0
 sqlparse==0.3.1
