@@ -61,7 +61,7 @@ pyrsistent==0.15.7
 python-crontab==2.4.1
 python-dateutil==2.8.1
 pytz==2019.3
-pywin32==227
+pywin32==301
 pywin32-ctypes==0.2.0
 PyYAML==5.3
 redis==3.4.1
