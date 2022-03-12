@@ -51,7 +51,7 @@ netaddr==0.7.19
 odfpy==1.4.1
 openpyxl==3.0.3
 parsimonious==0.8.1
-Pillow==7.0.0
+Pillow==9.0.1
 protobuf==3.11.3
 pyasn1==0.4.8
 pycryptodome==3.9.7
