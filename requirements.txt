@@ -7,7 +7,7 @@ base58==2.0.0
 billiard==3.6.3.0
 celery==4.4.2
 celery-once==3.0.1
-certifi==2019.11.28
+certifi==2022.12.7
 chardet==3.0.4
 cytoolz==0.10.1
 defusedxml==0.6.0
